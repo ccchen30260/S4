@@ -20,16 +20,11 @@
             --border-color: #a0a0a0;
         }
 
-        /* ✅ 手機友善：採用 S4 的自適應滾動排版 */
         body {
             font-family: "Microsoft JhengHei", Arial, sans-serif;
-            margin: 0;
-            padding: 10px 10px 20px 10px;
+            margin: 10px;
             background-color: #fcfcfc;
             touch-action: manipulation;
-            min-height: 100vh;
-            box-sizing: border-box;
-            overflow-y: auto;
         }
 
         .sync-status {
@@ -64,50 +59,78 @@
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
             width: 90%;
-            max-width: 450px;
+            max-width: 380px;
             text-align: center;
             box-sizing: border-box;
             border: 1px solid #e0e0e0;
         }
 
-        .login-card h2 { margin-top: 0; margin-bottom: 20px; color: #333; font-size: 20px; }
-
-        .login-field { margin-bottom: 15px; text-align: left; }
-        .login-field label { display: block; margin-bottom: 6px; font-size: 14px; font-weight: bold; color: #555; }
-        .login-field input, .login-field select, .login-field textarea {
-            width: 100%; padding: 10px; font-size: 15px; border: 1px solid #ccc;
-            border-radius: 6px; box-sizing: border-box; background-color: #fff; outline: none;
-            resize: vertical; font-family: inherit;
+        .login-card h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #333;
+            font-size: 20px;
         }
 
-        .login-btn { width: 100%; padding: 10px; font-size: 16px; font-weight: bold; color: #fff; background-color: #28a745; border: none; border-radius: 6px; cursor: pointer; margin-top: 10px; transition: background-color 0.2s; }
+        .login-field {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .login-field label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 14px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .login-field input, .login-field select {
+            width: 100%;
+            padding: 10px;
+            font-size: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+            background-color: #fff;
+            outline: none;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #28a745;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.2s;
+        }
+
         .login-btn:hover { background-color: #218838; }
 
-        .login-error { color: #dc3545; font-size: 13px; margin-top: 12px; display: none; font-weight: bold; }
-
-        /* ✅ 主應用布局改為一般文檔流 */
-        .main-app {
+        .login-error {
+            color: #dc3545;
+            font-size: 13px;
+            margin-top: 12px;
             display: none;
-            width: 100%;
-            padding-bottom: 10px;
+            font-weight: bold;
         }
 
-        /* ✅ 頂部控制列：採用貼頂固定，並帶底部分隔線 */
+        .main-app { display: none; }
+
         .header-controls {
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            background-color: #fcfcfc;
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
             gap: 8px;
-            margin-bottom: 0;
-            padding: 10px 0 8px 0;
+            margin-bottom: 10px;
             width: 100%;
             box-sizing: border-box;
-            border-bottom: 2px solid #e0e0e0;
         }
 
         .left-controls, .right-controls {
@@ -157,55 +180,166 @@
         .stat-badge-lv { background-color: #ffe6e6; color: #d9363e; border-color: #ffa39e; }
         .stat-badge-ua { background-color: #e2e2e2; color: #495057; border-color: #ced4da; }
 
-        select { font-size: 14px; padding: 4px; border: 1px solid #ccc; background-color: #ffe6e6; border-radius: 4px; outline: none; }
-        select:disabled { background-color: #e0e0e0; color: #666; cursor: not-allowed; }
-
-        .user-info { font-size: 13px; font-weight: bold; color: #333; background-color: #e9ecef; padding: 5px 8px; border-radius: 4px; white-space: nowrap; }
-
-        .change-pwd-btn, .logout-btn, .toggle-btn, .form-status-btn, .highlight-btn, .edit-marquee-btn, .edit-employee-btn {
-            padding: 6px 8px; font-size: 12px; font-weight: bold; color: #fff; border: none; border-radius: 4px; cursor: pointer; white-space: nowrap;
+        select {
+            font-size: 14px;
+            padding: 4px;
+            border: 1px solid #ccc;
+            background-color: #ffe6e6;
+            border-radius: 4px;
+            outline: none;
         }
+
+        select:disabled {
+            background-color: #e0e0e0;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        .user-info {
+            font-size: 13px;
+            font-weight: bold;
+            color: #333;
+            background-color: #e9ecef;
+            padding: 5px 8px;
+            border-radius: 4px;
+            white-space: nowrap;
+        }
+
+        .change-pwd-btn, .logout-btn, .toggle-btn, .form-status-btn, .highlight-btn {
+            padding: 6px 8px;
+            font-size: 12px;
+            font-weight: bold;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
         .change-pwd-btn { background-color: #17a2b8; }
         .logout-btn { background-color: #dc3545; }
         .toggle-btn { background-color: #007bff; }
         .highlight-btn { background-color: #6f42c1; }
         .highlight-btn.active { background-color: #28a745; }
-        .edit-marquee-btn { background-color: #fd7e14; }
-        .edit-employee-btn { background-color: #e83e8c; }
+        .highlight-btn:disabled { cursor: not-allowed; opacity: 0.7; }
 
         .form-status-btn.open { background-color: #28a745; }
         .form-status-btn.closed { background-color: #6c757d; }
+        .form-status-btn:disabled { cursor: not-allowed; opacity: 0.85; }
 
         .btn-confirm {
-            position: fixed; bottom: 25px; right: 25px; z-index: 9999; display: none; padding: 15px 25px;
-            font-size: 20px; font-weight: bold; color: #fff; background-color: #28a745; border: none;
-            border-radius: 50px; box-shadow: 0 4px 15px rgba(40, 167, 69, 0.5); cursor: pointer;
-            transition: all 0.3s ease; user-select: none;
+            position: fixed;
+            bottom: 25px;
+            right: 25px;
+            z-index: 9999;
+            display: none;
+            padding: 15px 25px;
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+            background-color: #28a745;
+            border: none;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.5);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            user-select: none;
         }
-        .btn-confirm:hover:not(:disabled) { background-color: #218838; transform: scale(1.05); box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6); }
-        .btn-confirm:active:not(:disabled) { transform: scale(0.95); }
-        .btn-confirm:disabled { background-color: #a0a0a0 !important; box-shadow: none !important; cursor: default !important; transform: scale(1) !important; opacity: 1 !important; }
+        .btn-confirm:hover:not(:disabled) {
+            background-color: #218838;
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
+        }
+        .btn-confirm:active:not(:disabled) {
+            transform: scale(0.95);
+        }
+        .btn-confirm:disabled {
+            background-color: #a0a0a0 !important;
+            box-shadow: none !important;
+            cursor: default !important;
+            transform: scale(1) !important;
+            opacity: 1 !important;
+        }
+        @media screen and (max-width: 600px) {
+            .btn-confirm {
+                bottom: 15px;
+                right: 15px;
+                padding: 12px 18px;
+                font-size: 17px;
+            }
+        }
 
-        .custom-modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); display: none; justify-content: center; align-items: center; z-index: 10000; }
-        .custom-modal-box { background-color: #ffffff; padding: 40px 30px; border-radius: 16px; max-width: 450px; width: 90%; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2); animation: fadeIn 0.3s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-        .custom-modal-box h3 { margin-top: 0; margin-bottom: 25px; font-size: 22px; line-height: 1.5; }
-        .custom-modal-box p { font-size: 16px; color: #333; margin-bottom: 25px; line-height: 1.6; }
-        .modal-btn-group { display: flex; justify-content: center; gap: 15px; }
-        .modal-btn-confirm, .modal-btn-cancel { padding: 12px 30px; font-size: 17px; font-weight: bold; border: none; border-radius: 30px; cursor: pointer; transition: 0.2s; }
-        .modal-btn-confirm { background-color: #28a745; color: #fff; }
-        .modal-btn-confirm:hover { background-color: #218838; }
-        .modal-btn-cancel { background-color: #e9ecef; color: #333; border: 1px solid #ced4da; }
-        .modal-btn-cancel:hover { background-color: #dde0e3; }
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+        .custom-modal-box {
+            background-color: #ffffff;
+            padding: 40px 30px;
+            border-radius: 16px;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .custom-modal-box h3 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-size: 22px;
+            line-height: 1.5;
+        }
+        .custom-modal-box p {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        .modal-btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        .modal-btn-confirm, .modal-btn-cancel {
+            padding: 12px 30px;
+            font-size: 17px;
+            font-weight: bold;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .modal-btn-confirm {
+            background-color: #28a745;
+            color: #fff;
+        }
+        .modal-btn-confirm:hover {
+            background-color: #218838;
+        }
+        .modal-btn-cancel {
+            background-color: #e9ecef;
+            color: #333;
+            border: 1px solid #ced4da;
+        }
+        .modal-btn-cancel:hover {
+            background-color: #dde0e3;
+        }
 
-        /* ✅ 表格容器：採用 S4 固定高度讓手機有明確的可滑動空間 */
         .table-container {
             overflow: auto;
-            height: calc(100vh - 110px); /* 預留上方控制列與下方跑馬燈空間 */
+            max-height: 80vh;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
             background-color: white;
             -webkit-overflow-scrolling: touch;
-            margin-top: 5px;
         }
 
         table {
@@ -249,13 +383,25 @@
         .weekend-header { color: red; }
         .today-header { background-color: #00ffff !important; }
 
-        tr.daily-ot-row { background-color: #fffbe6; font-weight: bold; }
-        tr.daily-ot-row td { background-color: #fffbe6; color: #d48806; border-top: 2px solid #ffe58f; }
-        tr.daily-ot-row td.col-name { background-color: #fff1b8; color: #873800; }
-        tr.daily-ot-row td.stats-ot, tr.daily-ot-row td.stats-lv { background-color: #fff1b8; }
+        tr.daily-ot-row {
+            background-color: #fffbe6;
+            font-weight: bold;
+        }
+        tr.daily-ot-row td {
+            background-color: #fffbe6;
+            color: #d48806;
+            border-top: 2px solid #ffe58f;
+        }
+        tr.daily-ot-row td.col-name {
+            background-color: #fff1b8;
+            color: #873800;
+        }
+        tr.daily-ot-row td.stats-ot, tr.daily-ot-row td.stats-lv {
+            background-color: #fff1b8;
+        }
 
         .cell-content { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; min-height: 38px; box-sizing: border-box; }
-        
+
         .shift-select {
             width: 100%; height: 38px; border: none; background-color: transparent;
             font-size: 15px; font-family: inherit; text-align: center; text-align-last: center;
@@ -263,14 +409,9 @@
             color: inherit; font-weight: inherit;
         }
 
-        /* ✅ 填表關閉時的外觀：完全保留原樣，僅不可點擊 */
-        .shift-select:disabled,
-        .daily-mark-select:disabled {
-            cursor: default !important;
-            background-color: transparent !important;
-            color: inherit !important;
-            -webkit-text-fill-color: unset !important;
-            opacity: 1 !important;
+        .shift-select:disabled {
+            cursor: not-allowed;
+            opacity: 0.9;
         }
 
         .shift-day { background-color: var(--bg-day); }
@@ -287,43 +428,39 @@
         .shift-absent { background-color: #ffccbc; color: black; font-weight: bold; }
 
         .daily-mark-select {
-            width: 100%; height: 38px; border: 1px solid #ccc; background-color: #ffffff;
-            font-size: 16px; font-weight: bold; text-align: center; text-align-last: center;
-            appearance: none; -webkit-appearance: none; -moz-appearance: none; cursor: pointer; outline: none;
-        }
-
-        td.pending-edit select { outline: 3px solid #ffc107; background-color: #fff3cd !important; }
-
-        body.crosshair-active td.crosshair-highlight, body.crosshair-active th.crosshair-highlight { background-color: #ffeaa7 !important; transition: background-color 0.15s ease; }
-        body.crosshair-active td.crosshair-highlight select { background-color: #ffeaa7 !important; }
-
-        /* ✅ 跑馬燈：完全採用 S4 設計 */
-        #tickerContainer {
             width: 100%;
-            overflow: hidden;
-            background-color: #fffbe6;
-            border: 1px solid #ddd;
-            border-top: none;
-            padding: 8px 0;
-            white-space: nowrap;
-            box-sizing: border-box;
-            position: relative;
-            display: block;
-            margin-top: 10px;
+            height: 38px;
+            border: 1px solid #ccc;
+            background-color: #ffffff;
+            font-size: 16px;
+            font-weight: bold;
+            text-align: center;
+            text-align-last: center;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            cursor: pointer;
+            outline: none;
         }
-        #tickerText {
-            display: inline-block;
-            padding-left: 100%;
-            animation: scrollText 35s linear infinite;
-            font-size: 15px;
-            color: #333;
+        .daily-mark-select:disabled {
+            background-color: #f0f0f0;
+            cursor: not-allowed;
         }
-        @keyframes scrollText {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-100%); }
+
+        td.pending-edit select {
+            outline: 3px solid #ffc107;
+            background-color: #fff3cd !important;
         }
-        
-        .extra-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; width: 100%; flex-shrink: 0; }
+
+        /* 十字高亮效果 */
+        body.crosshair-active td.crosshair-highlight,
+        body.crosshair-active th.crosshair-highlight {
+            background-color: #ffeaa7 !important;
+            transition: background-color 0.15s ease;
+        }
+        body.crosshair-active td.crosshair-highlight select {
+            background-color: #ffeaa7 !important;
+        }
     </style>
 </head>
 <body>
@@ -384,37 +521,6 @@
     </div>
 </div>
 
-<!-- 編輯跑馬燈視窗 -->
-<div id="tickerEditModal" class="custom-modal-overlay" style="display: none; z-index: 10000;">
-    <div class="custom-modal-box">
-        <h3>Edit Ticker / 修改跑馬燈</h3>
-        <p>Please edit the rolling text below:<br>請在下方修改跑馬燈文字內容：</p>
-        <textarea id="tickerInputArea" rows="3" style="width: 100%;"></textarea>
-        <div class="modal-btn-group">
-            <button id="tickerSaveBtn" class="modal-btn-confirm">Save / 儲存</button>
-            <button id="tickerCancelBtn" class="modal-btn-cancel">Cancel / 取消</button>
-        </div>
-        <div id="tickerErrorMsg" class="login-error"></div>
-    </div>
-</div>
-
-<!-- 管理班表人員視窗 -->
-<div id="employeeEditModal" class="custom-modal-overlay" style="display: none; z-index: 10000;">
-    <div class="custom-modal-box" style="text-align: left;">
-        <h3>Manage Staff / 管理人員</h3>
-        <p>Click name to edit, click trash to delete.<br>點擊姓名可修改，點擊垃圾桶可刪除。</p>
-        <div id="employeeListContainer" style="max-height: 250px; overflow-y: auto; border: 1px solid #eee; padding: 10px; margin: 10px 0 15px 0; border-radius: 4px;"></div>
-        <div id="employeeAddBox" style="display: flex; gap: 8px; margin-top: 5px;">
-            <input type="text" id="newEmployeeInput" placeholder="Add name / 輸入新姓名..." style="flex: 1; padding: 8px 10px; border: 1px solid #ccc; border-radius: 4px; font-size: 15px; outline: none;">
-            <button id="addEmployeeBtn" style="padding: 8px 15px; font-weight: bold; background-color: #28a745; color: #fff; border: none; border-radius: 4px; cursor: pointer;">➕ Add / 新增</button>
-        </div>
-        <div class="modal-btn-group" style="margin-top: 15px; display: flex; justify-content: flex-end; gap: 10px;">
-            <button id="employeeSaveBtn" class="modal-btn-confirm">Save & Close / 儲存並關閉</button>
-        </div>
-        <div id="empErrorMsg" class="login-error"></div>
-    </div>
-</div>
-
 <!-- 自定義雙語確認視窗 -->
 <div id="confirmModal" class="custom-modal-overlay">
     <div class="custom-modal-box">
@@ -439,7 +545,6 @@
 
 <!-- 主應用 -->
 <div id="mainApp" class="main-app">
-    <!-- ========== 控制列已具備 sticky 黏性效果 ========== -->
     <div class="header-controls">
         <div class="left-controls">
             <div class="control-group">
@@ -450,7 +555,7 @@
                 <span>月份</span>
                 <select id="monthSelect"></select>
             </div>
-            <div class="control-group" id="otLimitGroup">
+            <div class="control-group">
                 <span>加班限制</span>
                 <select id="otLimitSelect">
                     <option value="">空白</option>
@@ -479,30 +584,13 @@
                     <option value="S4">S4</option>
                 </select>
             </div>
+            <!-- 十字高亮開關 -->
+            <button id="highlightBtn" class="highlight-btn" disabled>十字高亮：關</button>
             <button id="formStatusBtn" class="form-status-btn open">填表：開啟</button>
             <div id="userInfoDisplay" class="user-info">👤 未登入</div>
             <button id="changePwdBtn" class="change-pwd-btn">修改密碼</button>
             <button id="logoutBtn" class="logout-btn">登出</button>
             <button id="toggleStatsBtn" class="toggle-btn">隱藏統計</button>
-            
-            <!-- 十字高亮開關 -->
-            <div class="control-group" id="crosshairControl" style="display: none; background-color: #e0e0e0; border-color: #999;">
-                <span style="font-size:12px; color:#333;">十字高亮</span>
-                <label class="toggle-switch" style="position: relative; display: inline-block; width: 34px; height: 18px; margin-left: 5px; margin-right: 5px;">
-                    <input type="checkbox" id="crosshairToggle" style="opacity: 0; width: 0; height: 0;">
-                    <span class="slider" style="position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px;"></span>
-                </label>
-                <style>
-                    .slider:before { position: absolute; content: ""; height: 14px; width: 14px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
-                    input:checked + .slider { background-color: #28a745; }
-                    input:checked + .slider:before { transform: translateX(16px); }
-                    .slider.round { border-radius: 34px; }
-                    .slider.round:before { border-radius: 50%; }
-                </style>
-            </div>
-
-            <button id="editTickerBtn" class="edit-marquee-btn" style="display: none;">📝 修改跑馬燈</button>
-            <button id="editEmployeeBtn" class="edit-employee-btn" style="display: none;">👥 管理人員</button>
         </div>
     </div>
 
@@ -512,23 +600,20 @@
             <tbody id="tableBody"></tbody>
         </table>
     </div>
-
-    <!-- 跑馬燈顯示區塊 -->
-    <div id="tickerContainer">
-        <div id="tickerText"></div>
-    </div>
 </div>
 
 <script>
-    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbz2gpwtAwV1CMfQFDyEyyfmoCq9Xn3nGqfExpGpmZw4BaTytFO86GQR1rVIMONcQxRP/exec";
+    const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzLY435Gr3k6783bG__8TM0xs04CDLztMghV3Et4LX411iGTEt3so3zYSOVZlo27qPl/exec";
 
-    const squadEmployeesDefault = {
+    // 各班員工名單 (已修正姓名)
+    const squadEmployees = {
         S1: ["方慎之","陳泰安","蔡南嘉","李珮菁","朱建穎","王泳淇","吳峻霖","黃詠綺","蘭狄","凱文","勞倫司","安東尼","明華","艾麥倫","邱立斯","拉特","羅內爾","艾佛森"],
         S2: ["黃正忠","張韶眞","陳宥庠","黃威翔","羅翊禎","黃文靖","蔡易良","吳奇玲","詹姆士","達力","山博","羅傑","達路","童氏蓮","羅德","達布","安吉","羅蘭多"],
         S3: ["陳文全","吳國隆","李茂玄","葉秀芬","王俊智","吳慧如","黃筱珊","吳明珠","蘇炫元","托弗","杰倫","艾諾","吳氏莊","納撒","格林","喬司華","喬丹","吉姆"],
         S4: ["陳喬志","楊代億","廖曉彤","蔡靜儀","賴建亦","施榮傑","陰其德","黃譯鋒","楊雅婷","羅啟倫","埃爾默","拉斯特","雷伊","漢斯","達利斯","甘達","特拉多","達爾文"]
     };
 
+    // 各班管理員
     const squadManagers = {
         S1: "方慎之",
         S2: "黃正忠",
@@ -540,10 +625,11 @@
 
     let cloudData = { shifts: {}, passwords: {}, otLimits: {}, settings: {} };
     let pendingChanges = {};
+
     let currentUser = null;
     let currentSquad = null;
     let currentViewSquad = null;
-    let crosshairEnabled = false; 
+    let crosshairEnabled = false; // 十字高亮狀態
 
     const syncStatus = document.getElementById('syncStatus');
     const loginOverlay = document.getElementById('loginOverlay');
@@ -567,8 +653,6 @@
     const logoutBtn = document.getElementById('logoutBtn');
     const formStatusBtn = document.getElementById('formStatusBtn');
     const highlightBtn = document.getElementById('highlightBtn');
-    const crosshairToggle = document.getElementById('crosshairToggle');
-    const crosshairControl = document.getElementById('crosshairControl');
     
     const confirmBtn = document.getElementById('confirmBtn');
     const confirmModal = document.getElementById('confirmModal');
@@ -582,7 +666,6 @@
     const yearSelect = document.getElementById('yearSelect');
     const monthSelect = document.getElementById('monthSelect');
     const otLimitSelect = document.getElementById('otLimitSelect');
-    const otLimitGroup = document.getElementById('otLimitGroup');
     const toggleStatsBtn = document.getElementById('toggleStatsBtn');
     const viewSquadSelect = document.getElementById('viewSquadSelect');
 
@@ -590,31 +673,15 @@
     const totalLvDisplay = document.getElementById('totalLvDisplay');
     const totalUaDisplay = document.getElementById('totalUaDisplay');
 
-    const editTickerBtn = document.getElementById('editTickerBtn');
-    const tickerEditModal = document.getElementById('tickerEditModal');
-    const tickerInputArea = document.getElementById('tickerInputArea');
-    const tickerSaveBtn = document.getElementById('tickerSaveBtn');
-    const tickerCancelBtn = document.getElementById('tickerCancelBtn');
-    const tickerErrorMsg = document.getElementById('tickerErrorMsg');
-    const tickerContainer = document.getElementById('tickerContainer');
-    const tickerTextEl = document.getElementById('tickerText');
-
-    const editEmployeeBtn = document.getElementById('editEmployeeBtn');
-    const employeeEditModal = document.getElementById('employeeEditModal');
-    const employeeListContainer = document.getElementById('employeeListContainer');
-    const newEmployeeInput = document.getElementById('newEmployeeInput');
-    const addEmployeeBtn = document.getElementById('addEmployeeBtn');
-    const employeeSaveBtn = document.getElementById('employeeSaveBtn');
-    const empErrorMsg = document.getElementById('empErrorMsg');
-
     function showSync() { syncStatus.style.display = 'block'; }
     function hideSync() { syncStatus.style.display = 'none'; }
 
+    // 登入班級切換時更新姓名選單
     loginSquadSelect.addEventListener('change', function() {
         const squad = this.value;
         loginNameSelect.innerHTML = '<option value="">-- 請選擇姓名 --</option>';
-        if (squad && squadEmployeesDefault[squad]) {
-            squadEmployeesDefault[squad].forEach(emp => {
+        if (squad && squadEmployees[squad]) {
+            squadEmployees[squad].forEach(emp => {
                 let opt = document.createElement('option');
                 opt.value = emp;
                 opt.textContent = emp;
@@ -627,9 +694,7 @@
     async function fetchCloudData() {
         showSync();
         try {
-            const resp = await fetch(`${GAS_WEB_APP_URL}?action=getAllData&_=${Date.now()}&r=${Math.random()}`, {
-                cache: 'no-store'
-            });
+            const resp = await fetch(`${GAS_WEB_APP_URL}?action=getAllData`);
             const data = await resp.json();
             if (data) cloudData = data;
             if (cloudData.settings) {
@@ -667,10 +732,8 @@
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
-            return true;
         } catch (err) {
             console.error("雲端寫入失敗", err);
-            return false;
         } finally {
             hideSync();
         }
@@ -690,17 +753,6 @@
         return (cloudData.settings && cloudData.settings[key]) ? cloudData.settings[key] : {};
     }
 
-    function getEmployeeList(squad) {
-        const key = squad + '_employees';
-        if (cloudData.settings && cloudData.settings[key]) {
-            try {
-                const parsed = JSON.parse(cloudData.settings[key]);
-                if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-            } catch(e) {}
-        }
-        return squadEmployeesDefault[squad] || [];
-    }
-
     function updateFormStatusUI() {
         if (!currentSquad || !currentViewSquad) return;
         const isMySquad = (currentViewSquad === currentSquad);
@@ -708,49 +760,61 @@
         const open = isFormOpen(currentViewSquad);
         formStatusBtn.textContent = open ? '填表：開啟' : '填表：關閉';
         formStatusBtn.className = 'form-status-btn ' + (open ? 'open' : 'closed');
-        formStatusBtn.style.display = (isMySquad && isManager) ? '' : 'none';
+        formStatusBtn.disabled = !(isMySquad && isManager);
     }
 
     function updateHighlightBtnUI() {
         if (!currentUser || !currentSquad) return;
+        const isManager = (currentUser === squadManagers[currentSquad]);
+        highlightBtn.disabled = !isManager;
         highlightBtn.textContent = crosshairEnabled ? '十字高亮：開' : '十字高亮：關';
         highlightBtn.className = 'highlight-btn' + (crosshairEnabled ? ' active' : '');
         document.body.classList.toggle('crosshair-active', crosshairEnabled);
     }
 
+    // 十字高亮開關
     highlightBtn.addEventListener('click', function() {
         if (!currentUser || currentUser !== squadManagers[currentSquad]) return;
         crosshairEnabled = !crosshairEnabled;
         updateHighlightBtnUI();
     });
 
+    // 十字高亮 hover 事件 (已修正日期/星期錯位問題)
     const tableContainer = document.querySelector('.table-container');
     tableContainer.addEventListener('mouseover', function(e) {
         if (!crosshairEnabled) return;
-        const targetCell = e.target.closest('th, td');
-        if (!targetCell) return;
+        const td = e.target.closest('td');
+        const th = e.target.closest('th');
+        const cell = td || th;
+        if (!cell) return;
+        
+        // 清除之前的高亮
         document.querySelectorAll('.crosshair-highlight').forEach(el => el.classList.remove('crosshair-highlight'));
-
-        const targetRow = targetCell.parentElement;
-        if (targetRow) { Array.from(targetRow.cells).forEach(c => c.classList.add('crosshair-highlight')); }
-
-        const rect = targetCell.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-
+        
         const table = document.getElementById('scheduleTable');
+        const rowIndex = cell.parentElement.rowIndex;
+        const colIndex = cell.cellIndex;
+        
+        // 【修正重點】針對表頭(日期/星期)的 column index 進行重新對應
+        // rowIndex=1 為日期行, rowIndex=2 為星期行
+        // 它們的 colIndex=2 實際上是 "日期/星期" 文字標籤，應映射到真正的第一天數據欄 (colIndex=3)
+        let targetColIndex = colIndex;
+        if ((rowIndex === 1 || rowIndex === 2) && colIndex === 2) {
+            targetColIndex = 3; 
+        }
+        
+        // 高亮整列 (該 row 的所有 th, td)
+        const row = table.rows[rowIndex];
+        if (row) {
+            Array.from(row.cells).forEach(c => c.classList.add('crosshair-highlight'));
+        }
+        // 高亮整欄 (該 col 的所有 th, td) - 使用修正後的 targetColIndex
         for (let i = 0; i < table.rows.length; i++) {
-            const row = table.rows[i];
-            let closestCell = null;
-            let minDist = Infinity;
-            for (let j = 0; j < row.cells.length; j++) {
-                const cellRect = row.cells[j].getBoundingClientRect();
-                const cellCenterX = cellRect.left + cellRect.width / 2;
-                const dist = Math.abs(cellCenterX - centerX);
-                if (dist < minDist) { minDist = dist; closestCell = row.cells[j]; }
-            }
-            if (closestCell) { closestCell.classList.add('crosshair-highlight'); }
+            const cellInCol = table.rows[i].cells[targetColIndex];
+            if (cellInCol) cellInCol.classList.add('crosshair-highlight');
         }
     });
+
     tableContainer.addEventListener('mouseleave', function() {
         if (!crosshairEnabled) return;
         document.querySelectorAll('.crosshair-highlight').forEach(el => el.classList.remove('crosshair-highlight'));
@@ -803,7 +867,7 @@
     }
 
     function calculateTotalClassStats(squad, year, month, daysInMonth) {
-        const empList = getEmployeeList(squad);
+        const empList = squadEmployees[squad];
         if (!empList) return;
         let grandTotalOt = 0, grandTotalLv = 0, grandTotalUa = 0;
         empList.forEach(empName => {
@@ -828,16 +892,18 @@
     }
 
     function calculateDailyOtStats(squad, year, month, daysInMonth) {
-        const empList = getEmployeeList(squad);
+        const empList = squadEmployees[squad];
         if (!empList) return;
         for (let i = 1; i <= daysInMonth; i++) {
             const dailyElem = document.getElementById(`daily_ot_${squad}_${year}_${month}_${i}`);
             if (!dailyElem) continue;
             const defaultShift = getDefaultShift(squad, year, month, i);
+            // 上班日不顯示加班人數
             if (defaultShift !== '') {
                 dailyElem.textContent = '';
                 continue;
             }
+            // 休息日計算加班人數
             let dailyOtCount = 0;
             empList.forEach(empName => {
                 const shiftKey = `${squad}_shift_${year}_${month}_${empName}_${i}`;
@@ -894,13 +960,15 @@
             `Are you sure you want to save the ${keys.length} pending change(s)? / 確定要儲存目前 ${keys.length} 筆異動資料嗎？`
         );
         if (!confirmSave) return;
+
         showSync();
         confirmBtn.disabled = true;
         try {
             const promises = [];
             for (const [key, val] of Object.entries(pendingChanges)) {
                 promises.push(fetch(GAS_WEB_APP_URL, {
-                    method: 'POST', mode: 'no-cors',
+                    method: 'POST',
+                    mode: 'no-cors',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ action: 'saveShift', key: key, value: val })
                 }));
@@ -932,31 +1000,10 @@
         const readOnly = !isMySquad;
 
         updateFormStatusUI();
-        updateHighlightBtnUI();
+        updateHighlightBtnUI(); // 更新高亮按鈕狀態
         const formOpen = isFormOpen(viewSquad);
 
-        otLimitGroup.style.display = (isMySquad && isManagerOfMy && formOpen) ? 'flex' : 'none';
-        crosshairControl.style.display = (isMySquad && isManagerOfMy) ? 'flex' : 'none';
-        editTickerBtn.style.display = (isMySquad && isManagerOfMy) ? '' : 'none';
-        editEmployeeBtn.style.display = (isMySquad && isManagerOfMy) ? '' : 'none';
-
-        const marqueeKey = viewSquad + '_marqueeText';
-        const defaultMarquee = `※"G"→加班；"C"→加班費1倍；"換"→換班日(不加班)；"歲"→歲修(不上班)；"旺"→尾牙(不上班)。`;
-        if (cloudData.settings && cloudData.settings[marqueeKey]) {
-            tickerTextEl.textContent = cloudData.settings[marqueeKey];
-        } else {
-            if (!cloudData.settings) cloudData.settings = {};
-            let valToSet = cloudData.settings['marqueeText'] || defaultMarquee;
-            cloudData.settings[marqueeKey] = valToSet;
-            postCloudData({ action: 'saveSetting', key: marqueeKey, value: valToSet });
-            tickerTextEl.textContent = valToSet;
-        }
-        
-        // 採用 S4 的跑馬燈重啟動畫機制
-        tickerContainer.style.display = 'block';
-        tickerTextEl.style.animation = 'none';
-        tickerTextEl.offsetHeight; /* 觸發 reflow */
-        tickerTextEl.style.animation = 'scrollText 35s linear infinite';
+        otLimitSelect.disabled = !(isMySquad && isManagerOfMy && formOpen);
 
         const year = parseInt(yearSelect.value);
         const month = parseInt(monthSelect.value);
@@ -1001,7 +1048,7 @@
             let thMark = document.createElement('th');
             let selectMark = document.createElement('select');
             selectMark.className = 'daily-mark-select';
-            ['', 'C', '換', '颱', '豪', '歲', '旺'].forEach(opt => {
+            ['', 'C', '颱', '豪', '歲', '旺'].forEach(opt => {
                 let option = document.createElement('option');
                 option.value = opt;
                 option.textContent = opt;
@@ -1035,12 +1082,11 @@
         thead.appendChild(trDate);
         thead.appendChild(trDay);
 
-        let allEmployees = getEmployeeList(viewSquad);
         let visibleEmployees;
         if (isMySquad) {
-            visibleEmployees = isManagerOfMy ? allEmployees : [currentUser];
+            visibleEmployees = isManagerOfMy ? squadEmployees[viewSquad] : [currentUser];
         } else {
-            visibleEmployees = allEmployees;
+            visibleEmployees = squadEmployees[viewSquad];
         }
 
         visibleEmployees.forEach(empName => {
@@ -1071,6 +1117,7 @@
                     select.disabled = true;
                 }
 
+                // 上班日新增返、差、曠
                 let baseOptions;
                 if (defaultShift === '') {
                     baseOptions = ['', 'G', '未'];
@@ -1104,8 +1151,7 @@
                     if (newVal === 'G' && defaultShift === '' && limitVal !== '') {
                         const limit = parseInt(limitVal, 10);
                         let otherOtCount = 0;
-                        let empList = getEmployeeList(viewSquad);
-                        empList.forEach(otherEmp => {
+                        squadEmployees[viewSquad].forEach(otherEmp => {
                             if (otherEmp === empName) return;
                             const key = `${viewSquad}_shift_${year}_${month}_${otherEmp}_${i}`;
                             const def = getDefaultShift(viewSquad, year, month, i);
@@ -1248,8 +1294,8 @@
             viewSquadSelect.value = squad;
             showSync();
             await fetchCloudData();
-            mainApp.style.display = 'block';
             loginOverlay.style.display = 'none';
+            mainApp.style.display = 'block';
             userInfoDisplay.textContent = `👤 ${currentUser} (${currentSquad})`;
             updateFormStatusUI();
             updateHighlightBtnUI();
@@ -1268,8 +1314,8 @@
             currentUser = savedUser;
             currentViewSquad = savedSquad;
             viewSquadSelect.value = savedSquad;
-            mainApp.style.display = 'block';
             loginOverlay.style.display = 'none';
+            mainApp.style.display = 'block';
             userInfoDisplay.textContent = `👤 ${currentUser} (${currentSquad})`;
             updateFormStatusUI();
             updateHighlightBtnUI();
@@ -1293,7 +1339,6 @@
         const oldVal = oldPwdInput.value;
         const newVal = newPwdInput.value;
         const confirmVal = confirmPwdInput.value;
-        
         if (oldVal !== correctPwd) {
             pwdErrorMsg.textContent = "舊密碼錯誤！";
             pwdErrorMsg.style.display = "block"; return;
@@ -1306,138 +1351,50 @@
             pwdErrorMsg.textContent = "兩次輸入的新密碼不一致！";
             pwdErrorMsg.style.display = "block"; return;
         }
-        
         if(!cloudData.passwords) cloudData.passwords = {};
         cloudData.passwords[currentUser] = newVal;
-        const saved = await postCloudData({ action: 'savePassword', key: currentUser, value: newVal });
-        
-        if (!saved) {
-             pwdErrorMsg.textContent = "❌ 寫入雲端失敗，請稍後再試。";
-             pwdErrorMsg.style.display = "block";
-             return;
-        }
-
+        await postCloudData({ action: 'savePassword', key: currentUser, value: newVal });
         alert("密碼修改成功！");
         changePwdModal.style.display = 'none';
-    });
-
-    // 跑馬燈管理邏輯
-    editTickerBtn.addEventListener('click', function() {
-        const marqueeKey = currentSquad + '_marqueeText';
-        const currentText = (cloudData.settings && cloudData.settings[marqueeKey]) 
-                            ? cloudData.settings[marqueeKey] 
-                            : `※"G"→加班；"C"→加班費1倍；"換"→換班日(不加班)；"歲"→歲修(不上班)；"旺"→尾牙(不上班)。`;
-        tickerInputArea.value = currentText;
-        tickerErrorMsg.style.display = 'none';
-        tickerEditModal.style.display = 'flex';
-    });
-    tickerCancelBtn.addEventListener('click', () => tickerEditModal.style.display = 'none');
-    tickerSaveBtn.addEventListener('click', async function() {
-        const newText = tickerInputArea.value.trim();
-        if (!newText) {
-            tickerErrorMsg.textContent = "跑馬燈內容不可空白！";
-            tickerErrorMsg.style.display = "block"; return;
-        }
-        const marqueeKey = currentSquad + '_marqueeText';
-        if(!cloudData.settings) cloudData.settings = {};
-        cloudData.settings[marqueeKey] = newText;
-        await postCloudData({ action: 'saveSetting', key: marqueeKey, value: newText });
-        tickerTextEl.textContent = newText;
-        tickerTextEl.style.animation = 'none';
-        tickerTextEl.offsetHeight;
-        tickerTextEl.style.animation = 'scrollText 35s linear infinite';
-        alert(`「${currentSquad}」跑馬燈文字已更新！`);
-        tickerEditModal.style.display = 'none';
-    });
-
-    // 管理班表人員邏輯
-    editEmployeeBtn.addEventListener('click', function() {
-        const currentList = getEmployeeList(currentSquad);
-        employeeListContainer.innerHTML = '';
-        currentList.forEach((name, index) => {
-            const div = document.createElement('div');
-            div.style.cssText = 'display: flex; justify-content: space-between; align-items: center; padding: 8px 5px; border-bottom: 1px solid #f0f0f0; cursor: pointer;';
-            if (index === currentList.length - 1) div.style.borderBottom = 'none';
-            
-            const nameSpan = document.createElement('span');
-            nameSpan.style.flex = '1';
-            nameSpan.textContent = name;
-            nameSpan.addEventListener('click', function() {
-                const newName = prompt(`編輯姓名 "${name}":`, name);
-                if (newName && newName.trim() !== '' && newName.trim() !== name) {
-                    if (currentList.includes(newName.trim())) { alert("此姓名已存在！"); return; }
-                    currentList[index] = newName.trim();
-                    editEmployeeBtn.click(); // 刷新畫面
-                }
-            });
-
-            const delBtn = document.createElement('button');
-            delBtn.textContent = '🗑️';
-            delBtn.style.cssText = 'background: transparent; border: none; cursor: pointer; font-size: 16px; padding: 4px; border-radius: 4px;';
-            delBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                if (confirm(`確定要刪除 "${name}" 嗎？`)) {
-                    currentList.splice(index, 1);
-                    editEmployeeBtn.click(); // 刷新畫面
-                }
-            });
-
-            div.appendChild(nameSpan);
-            div.appendChild(delBtn);
-            employeeListContainer.appendChild(div);
-        });
-        employeeEditModal.style.display = 'flex';
-    });
-    
-    addEmployeeBtn.addEventListener('click', function() {
-        const newName = newEmployeeInput.value.trim();
-        if (!newName) { alert("請輸入姓名！"); return; }
-        const currentList = getEmployeeList(currentSquad);
-        if (currentList.includes(newName)) { alert("此姓名已存在！"); newEmployeeInput.value = ''; return; }
-        currentList.push(newName);
-        newEmployeeInput.value = '';
-        editEmployeeBtn.click(); // 刷新畫面
-    });
-    newEmployeeInput.addEventListener('keypress', function(e) { if (e.key === 'Enter') addEmployeeBtn.click(); });
-    
-    employeeSaveBtn.addEventListener('click', async function() {
-        const currentList = getEmployeeList(currentSquad);
-        if (currentList.length === 0) { alert("名單不能為空！"); return; }
-        if(!cloudData.settings) cloudData.settings = {};
-        cloudData.settings[currentSquad + '_employees'] = JSON.stringify(currentList);
-        await postCloudData({ action: 'saveSetting', key: currentSquad + '_employees', value: JSON.stringify(currentList) });
-        employeeEditModal.style.display = 'none';
-        renderTable();
-        alert(`人員名單已更新！共 ${currentList.length} 人。`);
     });
 
     logoutBtn.addEventListener('click', function() {
         sessionStorage.removeItem('schedule_current_squad');
         sessionStorage.removeItem('schedule_current_user');
-        currentUser = null; currentSquad = null; currentViewSquad = null;
+        currentUser = null;
+        currentSquad = null;
+        currentViewSquad = null;
         pendingChanges = {};
-        loginSquadSelect.value = ''; loginNameSelect.innerHTML = '<option value="">-- 請選擇姓名 --</option>';
-        loginPasswordInput.value = ''; checkLoginStatus();
+        loginSquadSelect.value = '';
+        loginNameSelect.innerHTML = '<option value="">-- 請選擇姓名 --</option>';
+        loginPasswordInput.value = '';
+        checkLoginStatus();
     });
 
     otLimitSelect.addEventListener('change', function() {
         if (!currentSquad || !currentViewSquad || currentViewSquad !== currentSquad) return;
         if (currentUser !== squadManagers[currentSquad]) return;
-        const year = yearSelect.value; const month = monthSelect.value;
+        const year = yearSelect.value;
+        const month = monthSelect.value;
         const limitKey = `${currentSquad}_otlimit_${year}_${month}`;
         if (!cloudData.otLimits) cloudData.otLimits = {};
         cloudData.otLimits[limitKey] = this.value;
         postCloudData({ action: 'saveOtLimit', key: limitKey, value: this.value });
     });
 
-    const now = new Date(); const currentYear = now.getFullYear();
+    const now = new Date();
+    const currentYear = now.getFullYear();
     for (let y = currentYear - 5; y <= currentYear + 5; y++) {
-        let opt = document.createElement('option'); opt.value = y; opt.text = y;
-        if (y === currentYear) opt.selected = true; yearSelect.appendChild(opt);
+        let opt = document.createElement('option');
+        opt.value = y; opt.text = y;
+        if (y === currentYear) opt.selected = true;
+        yearSelect.appendChild(opt);
     }
     for (let m = 1; m <= 12; m++) {
-        let opt = document.createElement('option'); opt.value = m; opt.text = m;
-        if (m === (now.getMonth() + 1)) opt.selected = true; monthSelect.appendChild(opt);
+        let opt = document.createElement('option');
+        opt.value = m; opt.text = m;
+        if (m === (now.getMonth() + 1)) opt.selected = true;
+        monthSelect.appendChild(opt);
     }
 
     yearSelect.addEventListener('change', renderTable);
