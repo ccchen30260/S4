@@ -211,7 +211,7 @@
             white-space: nowrap;
         }
 
-        .change-pwd-btn, .logout-btn, .toggle-btn, .form-status-btn, .highlight-btn, .edit-marquee-btn, .edit-employee-btn, .toggle-notes-btn {
+        .change-pwd-btn, .logout-btn, .toggle-btn, .form-status-btn, .highlight-btn, .edit-marquee-btn, .edit-employee-btn {
             padding: 6px 8px;
             font-size: 12px;
             font-weight: bold;
@@ -230,7 +230,6 @@
         .highlight-btn:disabled { cursor: not-allowed; opacity: 0.7; }
         .edit-marquee-btn { background-color: #fd7e14; }
         .edit-employee-btn { background-color: #e83e8c; }
-        .toggle-notes-btn { background-color: #20c997; }
 
         .form-status-btn.open { background-color: #28a745; }
         .form-status-btn.closed { background-color: #6c757d; }
@@ -675,10 +674,9 @@
     <div class="extra-controls">
         <button id="editMarqueeBtn" class="edit-marquee-btn" style="display:none;">📝 編輯跑馬燈</button>
         <button id="editEmployeeBtn" class="edit-employee-btn" style="display:none;">👥 管理班表人員</button>
-        <button id="toggleNotesMarqueeBtn" class="toggle-notes-btn" style="display:none;">隱藏備註與跑馬燈</button>
     </div>
 
-    <div class="marquee-container" id="marqueeContainer">
+    <div class="marquee-container">
         <div id="marqueeText" class="marquee-content">※"G"→加班；"C"→加班費1倍；"換"→換班日(不加班)；"歲"→歲修(不上班)；"旺"→尾牙(不上班)。</div>
     </div>
 
@@ -776,10 +774,6 @@
     const cancelEmpBtn = document.getElementById('cancelEmpBtn');
     const empErrorMsg = document.getElementById('empErrorMsg');
 
-    // 新增：隱藏備註與跑馬燈按鈕
-    const toggleNotesMarqueeBtn = document.getElementById('toggleNotesMarqueeBtn');
-    const marqueeContainer = document.getElementById('marqueeContainer');
-
     function showSync() { syncStatus.style.display = 'block'; }
     function hideSync() { syncStatus.style.display = 'none'; }
 
@@ -870,11 +864,6 @@
         return squadEmployeesDefault[squad] || [];
     }
 
-    // 讀取隱藏備註與跑馬燈設定
-    function getHideNotesMarquee() {
-        return cloudData.settings && cloudData.settings['hideMarqueeAndNotes'] === 'true';
-    }
-
     function updateFormStatusUI() {
         if (!currentSquad || !currentViewSquad) return;
         const isMySquad = (currentViewSquad === currentSquad);
@@ -950,18 +939,6 @@
         cloudData.settings[key] = nextState;
         postCloudData({ action: 'saveSetting', key: key, value: nextState });
         updateFormStatusUI();
-        renderTable();
-    });
-
-    // 新增按鈕事件
-    toggleNotesMarqueeBtn.addEventListener('click', async function() {
-        if (!currentUser || currentUser !== squadManagers[currentSquad]) return;
-        const current = getHideNotesMarquee();
-        const newState = !current;
-        if (!cloudData.settings) cloudData.settings = {};
-        cloudData.settings['hideMarqueeAndNotes'] = newState ? 'true' : 'false';
-        await postCloudData({ action: 'saveSetting', key: 'hideMarqueeAndNotes', value: newState ? 'true' : 'false' });
-        // 重新渲染
         renderTable();
     });
 
@@ -1140,15 +1117,6 @@
         editMarqueeBtn.style.display = (isMySquad && isManagerOfMy) ? '' : 'none';
         editEmployeeBtn.style.display = (isMySquad && isManagerOfMy) ? '' : 'none';
 
-        // 顯示隱藏按鈕僅對管理者
-        toggleNotesMarqueeBtn.style.display = (isMySquad && isManagerOfMy) ? '' : 'none';
-        const hide = getHideNotesMarquee();
-        toggleNotesMarqueeBtn.textContent = hide ? '顯示備註與跑馬燈' : '隱藏備註與跑馬燈';
-
-        // 控制跑馬燈顯示
-        marqueeContainer.style.display = hide ? 'none' : 'block';
-
-        // 跑馬燈文字
         const defaultMarquee = `※"G"→加班；"C"→加班費1倍；"換"→換班日(不加班)；"歲"→歲修(不上班)；"旺"→尾牙(不上班)。`;
         if (cloudData.settings && cloudData.settings['marqueeText']) {
             marqueeText.textContent = cloudData.settings['marqueeText'];
@@ -1175,19 +1143,12 @@
         const tbody = document.getElementById('tableBody');
         thead.innerHTML = ''; tbody.innerHTML = '';
 
-        // 若隱藏備註，則不生成 trMark（第一行備註列）
-        const showNotes = !hide;
-
-        let trMark = null;
-        if (showNotes) {
-            trMark = document.createElement('tr');
-            trMark.innerHTML = `
-                <th class="stats-ot" rowspan="3"><div class="cell-content">當月<br>加班</div></th>
-                <th class="stats-lv" rowspan="3"><div class="cell-content">當月<br>請假</div></th>
-                <th class="col-name"><div class="cell-content">${viewSquad}</div></th>
-            `;
-        }
-
+        let trMark = document.createElement('tr');
+        trMark.innerHTML = `
+            <th class="stats-ot" rowspan="3"><div class="cell-content">當月<br>加班</div></th>
+            <th class="stats-lv" rowspan="3"><div class="cell-content">當月<br>請假</div></th>
+            <th class="col-name"><div class="cell-content">${viewSquad}</div></th>
+        `;
         let trDate = document.createElement('tr');
         trDate.innerHTML = `<th class="col-name"><div class="cell-content">日期</div></th>`;
         let trDay = document.createElement('tr');
@@ -1206,28 +1167,26 @@
             const dayOfWeek = dateObj.getDay();
             const isToday = (year === todayY && month === todayM && i === todayD);
 
-            if (showNotes) {
-                let thMark = document.createElement('th');
-                let selectMark = document.createElement('select');
-                selectMark.className = 'daily-mark-select';
-                ['', 'C', '颱', '豪', '歲', '旺', '換'].forEach(opt => {
-                    let option = document.createElement('option');
-                    option.value = opt;
-                    option.textContent = opt;
-                    selectMark.appendChild(option);
-                });
-                selectMark.value = dailyMarks[markKey] || '';
-                selectMark.disabled = !(isMySquad && isManagerOfMy);
-                selectMark.addEventListener('change', function() {
-                    if (!isMySquad || !isManagerOfMy) return;
-                    const newMark = this.value;
-                    dailyMarks[markKey] = newMark;
-                    cloudData.settings[viewSquad + '_dailyMarks'] = dailyMarks;
-                    postCloudData({ action: 'saveSetting', key: viewSquad + '_dailyMarks', value: JSON.stringify(dailyMarks) });
-                });
-                thMark.appendChild(selectMark);
-                trMark.appendChild(thMark);
-            }
+            let thMark = document.createElement('th');
+            let selectMark = document.createElement('select');
+            selectMark.className = 'daily-mark-select';
+            ['', 'C', '颱', '豪', '歲', '旺', '換'].forEach(opt => {
+                let option = document.createElement('option');
+                option.value = opt;
+                option.textContent = opt;
+                selectMark.appendChild(option);
+            });
+            selectMark.value = dailyMarks[markKey] || '';
+            selectMark.disabled = !(isMySquad && isManagerOfMy);
+            selectMark.addEventListener('change', function() {
+                if (!isMySquad || !isManagerOfMy) return;
+                const newMark = this.value;
+                dailyMarks[markKey] = newMark;
+                cloudData.settings[viewSquad + '_dailyMarks'] = dailyMarks;
+                postCloudData({ action: 'saveSetting', key: viewSquad + '_dailyMarks', value: JSON.stringify(dailyMarks) });
+            });
+            thMark.appendChild(selectMark);
+            trMark.appendChild(thMark);
 
             let thDate = document.createElement('th');
             thDate.innerHTML = `<div class="cell-content">${i}</div>`;
@@ -1241,9 +1200,7 @@
             trDay.appendChild(thDay);
         }
 
-        if (showNotes) {
-            thead.appendChild(trMark);
-        }
+        thead.appendChild(trMark);
         thead.appendChild(trDate);
         thead.appendChild(trDay);
 
