@@ -1165,7 +1165,10 @@
         const month = parseInt(monthSelect.value);
         const empList = getEmployeeList(currentViewSquad);
 
-        // 填充下拉選單（如果尚未填充或班別改變，則重新填充）
+        // 確保下拉選單可選
+        statsPersonSelect.disabled = false;
+
+        // 填充下拉選單
         const currentSelected = statsPersonSelect.value;
         statsPersonSelect.innerHTML = '';
         empList.forEach(emp => {
@@ -1174,13 +1177,20 @@
             opt.textContent = emp;
             statsPersonSelect.appendChild(opt);
         });
+
+        // 如果列表為空，隱藏面板
+        if (empList.length === 0) {
+            statsSummary.style.display = 'none';
+            return;
+        }
+
         // 預設選中當前用戶（管理員本人），若不在列表中則選第一個
         if (empList.includes(currentUser)) {
             statsPersonSelect.value = currentUser;
         } else if (currentSelected && empList.includes(currentSelected)) {
             statsPersonSelect.value = currentSelected;
         } else {
-            statsPersonSelect.value = empList[0] || '';
+            statsPersonSelect.value = empList[0];
         }
 
         const selectedEmp = statsPersonSelect.value;
