@@ -676,20 +676,36 @@
         <button id="editEmployeeBtn" class="edit-employee-btn" style="display:none;">👥 管理班表人員</button>
     </div>
 
-    <!-- ✨ 新增：管理員統計面板 -->
+    <!-- ✨ 個人統計面板（僅管理員可見） -->
     <div id="statsSummary" style="display:none; margin-bottom:10px; border:1px solid #ccc; border-radius:6px; padding:10px; background:#f9f9f9;">
-        <div style="font-weight:bold; margin-bottom:8px; font-size:15px;">📊 員工統計 (加班 / 請假 / 未到) - 僅管理員可見</div>
+        <div style="font-weight:bold; margin-bottom:8px; font-size:15px;">
+            📊 員工統計 (加班 / 請假 / 未到) - 僅管理員可見
+            <select id="statsPersonSelect" style="margin-left:10px; font-size:13px; padding:2px 4px;"></select>
+        </div>
         <div style="overflow-x:auto;">
             <table id="statsTable" style="width:100%; border-collapse:collapse; font-size:14px; text-align:center;">
                 <thead>
                     <tr>
-                        <th style="border:1px solid #ddd; padding:6px 8px; background:#e9ecef; text-align:left;">姓名</th>
+                        <th style="border:1px solid #ddd; padding:6px 8px; background:#e9ecef; text-align:left;">項目</th>
                         <th style="border:1px solid #ddd; padding:6px 8px; background:#e9ecef;">加班</th>
                         <th style="border:1px solid #ddd; padding:6px 8px; background:#e9ecef;">請假</th>
                         <th style="border:1px solid #ddd; padding:6px 8px; background:#e9ecef;">未到</th>
                     </tr>
                 </thead>
-                <tbody id="statsBody"></tbody>
+                <tbody id="statsBody">
+                    <tr>
+                        <td id="statsMonthLabel" style="border:1px solid #ddd; padding:6px 8px; text-align:left;">當月 (2026/8)</td>
+                        <td id="statsMonthOt" style="border:1px solid #ddd; padding:6px 8px;">0</td>
+                        <td id="statsMonthLv" style="border:1px solid #ddd; padding:6px 8px;">0</td>
+                        <td id="statsMonthUa" style="border:1px solid #ddd; padding:6px 8px;">0</td>
+                    </tr>
+                    <tr>
+                        <td id="statsYearLabel" style="border:1px solid #ddd; padding:6px 8px; text-align:left;">年度合計 (2026)</td>
+                        <td id="statsYearOt" style="border:1px solid #ddd; padding:6px 8px;">0</td>
+                        <td id="statsYearLv" style="border:1px solid #ddd; padding:6px 8px;">0</td>
+                        <td id="statsYearUa" style="border:1px solid #ddd; padding:6px 8px;">0</td>
+                    </tr>
+                </tbody>
             </table>
         </div>
     </div>
@@ -792,9 +808,17 @@
     const cancelEmpBtn = document.getElementById('cancelEmpBtn');
     const empErrorMsg = document.getElementById('empErrorMsg');
 
-    // ✨ 統計面板元素
+    // 統計面板元素
     const statsSummary = document.getElementById('statsSummary');
-    const statsBody = document.getElementById('statsBody');
+    const statsPersonSelect = document.getElementById('statsPersonSelect');
+    const statsMonthLabel = document.getElementById('statsMonthLabel');
+    const statsMonthOt = document.getElementById('statsMonthOt');
+    const statsMonthLv = document.getElementById('statsMonthLv');
+    const statsMonthUa = document.getElementById('statsMonthUa');
+    const statsYearLabel = document.getElementById('statsYearLabel');
+    const statsYearOt = document.getElementById('statsYearOt');
+    const statsYearLv = document.getElementById('statsYearLv');
+    const statsYearUa = document.getElementById('statsYearUa');
 
     function showSync() { syncStatus.style.display = 'block'; }
     function hideSync() { syncStatus.style.display = 'none'; }
@@ -1122,7 +1146,7 @@
         }
     });
 
-    // ✨ 新增：管理員統計表填充函數
+    // ✨ 個人統計（當月 + 年度合計）
     function populateStatsSummary() {
         if (!currentUser || !currentViewSquad) {
             statsSummary.style.display = 'none';
@@ -1139,32 +1163,73 @@
 
         const year = parseInt(yearSelect.value);
         const month = parseInt(monthSelect.value);
-        const daysInMonth = new Date(year, month, 0).getDate();
         const empList = getEmployeeList(currentViewSquad);
+
+        // 填充下拉選單（如果尚未填充或班別改變，則重新填充）
+        const currentSelected = statsPersonSelect.value;
+        statsPersonSelect.innerHTML = '';
+        empList.forEach(emp => {
+            const opt = document.createElement('option');
+            opt.value = emp;
+            opt.textContent = emp;
+            statsPersonSelect.appendChild(opt);
+        });
+        // 預設選中當前用戶（管理員本人），若不在列表中則選第一個
+        if (empList.includes(currentUser)) {
+            statsPersonSelect.value = currentUser;
+        } else if (currentSelected && empList.includes(currentSelected)) {
+            statsPersonSelect.value = currentSelected;
+        } else {
+            statsPersonSelect.value = empList[0] || '';
+        }
+
+        const selectedEmp = statsPersonSelect.value;
+        if (!selectedEmp) return;
+
+        // 更新標籤
+        statsMonthLabel.textContent = `當月 (${year}/${month})`;
+        statsYearLabel.textContent = `年度合計 (${year})`;
+
+        // 計算當月統計
+        const daysInMonth = new Date(year, month, 0).getDate();
+        let monthOt = 0, monthLv = 0, monthUa = 0;
         const leaveTypes = ['特', '病', '事', '生', '婚', '喪', '公'];
 
-        let html = '';
-        empList.forEach(empName => {
-            let ot = 0, lv = 0, ua = 0;
-            for (let d = 1; d <= daysInMonth; d++) {
-                const shiftKey = `${currentViewSquad}_shift_${year}_${month}_${empName}_${d}`;
-                const defaultShift = getDefaultShift(currentViewSquad, year, month, d);
+        for (let d = 1; d <= daysInMonth; d++) {
+            const shiftKey = `${currentViewSquad}_shift_${year}_${month}_${selectedEmp}_${d}`;
+            const defaultShift = getDefaultShift(currentViewSquad, year, month, d);
+            const saved = (cloudData.shifts && cloudData.shifts[shiftKey] !== undefined) ? cloudData.shifts[shiftKey] : defaultShift;
+            const val = (saved !== undefined && saved !== null) ? saved : '';
+            if (val === 'G') monthOt++;
+            else if (leaveTypes.includes(val)) monthLv++;
+            else if (val === '未') monthUa++;
+        }
+
+        statsMonthOt.textContent = monthOt;
+        statsMonthLv.textContent = monthLv;
+        statsMonthUa.textContent = monthUa;
+
+        // 計算年度合計（全年 1~12 月）
+        let yearOt = 0, yearLv = 0, yearUa = 0;
+        for (let m = 1; m <= 12; m++) {
+            const daysInMonthM = new Date(year, m, 0).getDate();
+            for (let d = 1; d <= daysInMonthM; d++) {
+                const shiftKey = `${currentViewSquad}_shift_${year}_${m}_${selectedEmp}_${d}`;
+                const defaultShift = getDefaultShift(currentViewSquad, year, m, d);
                 const saved = (cloudData.shifts && cloudData.shifts[shiftKey] !== undefined) ? cloudData.shifts[shiftKey] : defaultShift;
                 const val = (saved !== undefined && saved !== null) ? saved : '';
-
-                if (val === 'G') ot++;
-                else if (leaveTypes.includes(val)) lv++;
-                else if (val === '未') ua++;
+                if (val === 'G') yearOt++;
+                else if (leaveTypes.includes(val)) yearLv++;
+                else if (val === '未') yearUa++;
             }
-            html += `<tr>
-                <td style="border:1px solid #ddd; padding:4px 8px; text-align:left;">${empName}</td>
-                <td style="border:1px solid #ddd; padding:4px 8px;">${ot}</td>
-                <td style="border:1px solid #ddd; padding:4px 8px;">${lv}</td>
-                <td style="border:1px solid #ddd; padding:4px 8px;">${ua}</td>
-            </tr>`;
-        });
-        statsBody.innerHTML = html;
+        }
+        statsYearOt.textContent = yearOt;
+        statsYearLv.textContent = yearLv;
+        statsYearUa.textContent = yearUa;
     }
+
+    // 人員下拉變更時重新統計
+    statsPersonSelect.addEventListener('change', populateStatsSummary);
 
     function renderTable() {
         if (!currentUser || !currentSquad) return;
@@ -1412,7 +1477,7 @@
         calculateDailyOtStats(viewSquad, year, month, daysInMonth);
         updateConfirmBtnState();
 
-        // ✨ 呼叫統計表填充
+        // 刷新個人統計面板
         populateStatsSummary();
     }
 
