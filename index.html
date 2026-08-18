@@ -676,6 +676,24 @@
         <button id="editEmployeeBtn" class="edit-employee-btn" style="display:none;">👥 管理班表人員</button>
     </div>
 
+    <!-- ✨ 新增：管理員統計面板 -->
+    <div id="statsSummary" style="display:none; margin-bottom:10px; border:1px solid #ccc; border-radius:6px; padding:10px; background:#f9f9f9;">
+        <div style="font-weight:bold; margin-bottom:8px; font-size:15px;">📊 員工統計 (加班 / 請假 / 未到) - 僅管理員可見</div>
+        <div style="overflow-x:auto;">
+            <table id="statsTable" style="width:100%; border-collapse:collapse; font-size:14px; text-align:center;">
+                <thead>
+                    <tr>
+                        <th style="border:1px solid #ddd; padding:6px 8px; background:#e9ecef; text-align:left;">姓名</th>
+                        <th style="border:1px solid #ddd; padding:6px 8px; background:#e9ecef;">加班</th>
+                        <th style="border:1px solid #ddd; padding:6px 8px; background:#e9ecef;">請假</th>
+                        <th style="border:1px solid #ddd; padding:6px 8px; background:#e9ecef;">未到</th>
+                    </tr>
+                </thead>
+                <tbody id="statsBody"></tbody>
+            </table>
+        </div>
+    </div>
+
     <div class="marquee-container">
         <div id="marqueeText" class="marquee-content">※"G"→加班；"C"→加班費1倍；"換"→換班日(不加班)；"歲"→歲修(不上班)；"旺"→尾牙(不上班)。</div>
     </div>
@@ -773,6 +791,10 @@
     const saveEmpBtn = document.getElementById('saveEmpBtn');
     const cancelEmpBtn = document.getElementById('cancelEmpBtn');
     const empErrorMsg = document.getElementById('empErrorMsg');
+
+    // ✨ 統計面板元素
+    const statsSummary = document.getElementById('statsSummary');
+    const statsBody = document.getElementById('statsBody');
 
     function showSync() { syncStatus.style.display = 'block'; }
     function hideSync() { syncStatus.style.display = 'none'; }
@@ -1100,6 +1122,50 @@
         }
     });
 
+    // ✨ 新增：管理員統計表填充函數
+    function populateStatsSummary() {
+        if (!currentUser || !currentViewSquad) {
+            statsSummary.style.display = 'none';
+            return;
+        }
+
+        const isManagerOfView = (currentUser === squadManagers[currentViewSquad]);
+        if (!isManagerOfView) {
+            statsSummary.style.display = 'none';
+            return;
+        }
+
+        statsSummary.style.display = 'block';
+
+        const year = parseInt(yearSelect.value);
+        const month = parseInt(monthSelect.value);
+        const daysInMonth = new Date(year, month, 0).getDate();
+        const empList = getEmployeeList(currentViewSquad);
+        const leaveTypes = ['特', '病', '事', '生', '婚', '喪', '公'];
+
+        let html = '';
+        empList.forEach(empName => {
+            let ot = 0, lv = 0, ua = 0;
+            for (let d = 1; d <= daysInMonth; d++) {
+                const shiftKey = `${currentViewSquad}_shift_${year}_${month}_${empName}_${d}`;
+                const defaultShift = getDefaultShift(currentViewSquad, year, month, d);
+                const saved = (cloudData.shifts && cloudData.shifts[shiftKey] !== undefined) ? cloudData.shifts[shiftKey] : defaultShift;
+                const val = (saved !== undefined && saved !== null) ? saved : '';
+
+                if (val === 'G') ot++;
+                else if (leaveTypes.includes(val)) lv++;
+                else if (val === '未') ua++;
+            }
+            html += `<tr>
+                <td style="border:1px solid #ddd; padding:4px 8px; text-align:left;">${empName}</td>
+                <td style="border:1px solid #ddd; padding:4px 8px;">${ot}</td>
+                <td style="border:1px solid #ddd; padding:4px 8px;">${lv}</td>
+                <td style="border:1px solid #ddd; padding:4px 8px;">${ua}</td>
+            </tr>`;
+        });
+        statsBody.innerHTML = html;
+    }
+
     function renderTable() {
         if (!currentUser || !currentSquad) return;
         const viewSquad = currentViewSquad || currentSquad;
@@ -1207,7 +1273,7 @@
         let allEmployees = getEmployeeList(viewSquad);
         let visibleEmployees;
         if (isMySquad) {
-            visibleEmployees = isManagerOfMy ? allEmployees : [currentUser];
+            visibleEmployees = isManagerOfView ? allEmployees : [currentUser];
         } else {
             visibleEmployees = allEmployees;
         }
@@ -1345,6 +1411,9 @@
         calculateTotalClassStats(viewSquad, year, month, daysInMonth);
         calculateDailyOtStats(viewSquad, year, month, daysInMonth);
         updateConfirmBtnState();
+
+        // ✨ 呼叫統計表填充
+        populateStatsSummary();
     }
 
     function calculateStats(empName, squad, year, month, daysInMonth, otCellId, lvCellId) {
