@@ -14,9 +14,13 @@
             --text-personal: #ffffff;
             --bg-sick: #ff0000;
             --text-sick: #ffffff;
-            --bg-physio: #ffe6cc;
+            --bg-physio: #ffab91;
             --bg-typhoon: #dae8fc;
             --bg-unattended: #d0d0d0;
+            --bg-absent: #a5d6a7;
+            --bg-marriage: #f48fb1;
+            --bg-mourning: #90a4ae;
+            --bg-public: #ce93d8;
             --border-color: #a0a0a0;
         }
 
@@ -59,7 +63,7 @@
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
             width: 90%;
-            max-width: 450px; /* 調整寬度以容納更多文字 */
+            max-width: 450px;
             text-align: center;
             box-sizing: border-box;
             border: 1px solid #e0e0e0;
@@ -207,7 +211,7 @@
             white-space: nowrap;
         }
 
-        .change-pwd-btn, .logout-btn, .toggle-btn, .form-status-btn, .highlight-btn, .edit-marquee-btn, .edit-employee-btn {
+        .change-pwd-btn, .logout-btn, .toggle-btn, .form-status-btn, .highlight-btn, .edit-marquee-btn, .edit-employee-btn, .toggle-notes-btn {
             padding: 6px 8px;
             font-size: 12px;
             font-weight: bold;
@@ -225,7 +229,8 @@
         .highlight-btn.active { background-color: #28a745; }
         .highlight-btn:disabled { cursor: not-allowed; opacity: 0.7; }
         .edit-marquee-btn { background-color: #fd7e14; }
-        .edit-employee-btn { background-color: #e83e8c; } /* 洋紅色，與原本系統的"特"休色調呼應 */
+        .edit-employee-btn { background-color: #e83e8c; }
+        .toggle-notes-btn { background-color: #20c997; } /* 青色 */
 
         .form-status-btn.open { background-color: #28a745; }
         .form-status-btn.closed { background-color: #6c757d; }
@@ -361,7 +366,7 @@
             border-bottom: 1px solid var(--border-color);
             padding: 0;
             min-width: 32px;
-            height: 38px;
+            height: 28px;
             box-sizing: border-box;
             background-clip: padding-box;
         }
@@ -372,8 +377,8 @@
         th { background-color: #f2f2f2; font-weight: bold; }
 
         thead tr:nth-child(1) th { position: sticky; top: 0; z-index: 1; }
-        thead tr:nth-child(2) th { position: sticky; top: 38px; z-index: 1; }
-        thead tr:nth-child(3) th { position: sticky; top: 76px; z-index: 1; }
+        thead tr:nth-child(2) th { position: sticky; top: 28px; z-index: 1; }
+        thead tr:nth-child(3) th { position: sticky; top: 56px; z-index: 1; }
 
         .stats-ot { position: sticky; left: 0; width: 40px; min-width: 40px; z-index: 2; color: #00b0f0; background-color: #e6f7ff; font-weight: bold; }
         .stats-lv { position: sticky; left: 40px; width: 40px; min-width: 40px; z-index: 2; color: #ff0000; background-color: #ffe6e6; font-weight: bold; }
@@ -404,18 +409,19 @@
             background-color: #fff1b8;
         }
 
-        .cell-content { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; min-height: 38px; box-sizing: border-box; }
+        .cell-content { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; min-height: 28px; box-sizing: border-box; }
 
         .shift-select {
-            width: 100%; height: 38px; border: none; background-color: transparent;
+            width: 100%; height: 28px; border: none; background-color: transparent;
             font-size: 15px; font-family: inherit; text-align: center; text-align-last: center;
             appearance: none; -webkit-appearance: none; -moz-appearance: none; cursor: pointer; outline: none;
             color: inherit; font-weight: inherit;
         }
 
         .shift-select:disabled {
-            cursor: not-allowed;
-            opacity: 0.9;
+            opacity: 1;
+            background-color: transparent;
+            cursor: default;
         }
 
         .shift-day { background-color: var(--bg-day); }
@@ -429,11 +435,14 @@
         .shift-typhoon { background-color: var(--bg-typhoon); color: black; font-weight: bold; }
         .shift-return { background-color: #b3e5fc; color: black; font-weight: bold; }
         .shift-business { background-color: #fff9c4; color: black; font-weight: bold; }
-        .shift-absent { background-color: #ffccbc; color: black; font-weight: bold; }
+        .shift-absent { background-color: var(--bg-absent); color: black; font-weight: bold; }
+        .shift-marriage { background-color: var(--bg-marriage); color: black; font-weight: bold; }
+        .shift-mourning { background-color: var(--bg-mourning); color: white; font-weight: bold; }
+        .shift-public { background-color: var(--bg-public); color: black; font-weight: bold; }
 
         .daily-mark-select {
             width: 100%;
-            height: 38px;
+            height: 28px;
             border: 1px solid #ccc;
             background-color: #ffffff;
             font-size: 16px;
@@ -447,8 +456,9 @@
             outline: none;
         }
         .daily-mark-select:disabled {
-            background-color: #f0f0f0;
-            cursor: not-allowed;
+            opacity: 1;
+            background-color: #ffffff;
+            cursor: default;
         }
 
         td.pending-edit select {
@@ -456,19 +466,19 @@
             background-color: #fff3cd !important;
         }
 
-        /* 十字高亮效果 */
         body.crosshair-active td.crosshair-highlight,
         body.crosshair-active th.crosshair-highlight {
-            background-color: #ffeaa7 !important;
-            transition: background-color 0.15s ease;
+            background-color: #ffffff !important;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.12);
+            color: inherit !important;
         }
         body.crosshair-active td.crosshair-highlight select {
-            background-color: #ffeaa7 !important;
+            background-color: #ffffff !important;
         }
 
-        /* 跑馬燈樣式 */
         .marquee-container {
-            margin-top: 10px;
+            margin-top: 0;
+            margin-bottom: 2px;
             border: 1px solid #e2e2e2;
             border-radius: 4px;
             background: #fffdf7;
@@ -490,7 +500,6 @@
             0% { transform: translateX(0%); }
             100% { transform: translateX(-200%); }
         }
-        /* 按鈕列表行 */
         .extra-controls {
             display: flex;
             align-items: center;
@@ -575,7 +584,7 @@
     </div>
 </div>
 
-<!-- ✨ 新增：管理班表人員視窗 -->
+<!-- 管理班表人員視窗 -->
 <div id="employeeModal" class="login-overlay" style="display: none; z-index: 10000;">
     <div class="login-card" style="text-align: left;">
         <h2 id="empModalTitle">管理班表人員</h2>
@@ -654,7 +663,6 @@
                     <option value="S4">S4</option>
                 </select>
             </div>
-            <!-- 十字高亮開關 -->
             <button id="highlightBtn" class="highlight-btn" disabled>十字高亮：關</button>
             <button id="formStatusBtn" class="form-status-btn open">填表：開啟</button>
             <div id="userInfoDisplay" class="user-info">👤 未登入</div>
@@ -664,10 +672,14 @@
         </div>
     </div>
     
-    <!-- 額外管理工具列 -->
     <div class="extra-controls">
         <button id="editMarqueeBtn" class="edit-marquee-btn" style="display:none;">📝 編輯跑馬燈</button>
         <button id="editEmployeeBtn" class="edit-employee-btn" style="display:none;">👥 管理班表人員</button>
+        <button id="toggleNotesMarqueeBtn" class="toggle-notes-btn" style="display:none;">隱藏備註與跑馬燈</button>
+    </div>
+
+    <div class="marquee-container" id="marqueeContainer">
+        <div id="marqueeText" class="marquee-content">※"G"→加班；"C"→加班費1倍；"換"→換班日(不加班)；"歲"→歲修(不上班)；"旺"→尾牙(不上班)。</div>
     </div>
 
     <div class="table-container">
@@ -676,17 +688,11 @@
             <tbody id="tableBody"></tbody>
         </table>
     </div>
-
-    <!-- 底部跑馬燈 -->
-    <div class="marquee-container">
-        <div id="marqueeText" class="marquee-content">※"G"→加班；"C"→加班費1倍；"換"→換班日(不加班)；"歲"→歲修(不上班)；"旺"→尾牙(不上班)。</div>
-    </div>
 </div>
 
 <script>
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzLY435Gr3k6783bG__8TM0xs04CDLztMghV3Et4LX411iGTEt3so3zYSOVZlo27qPl/exec";
 
-    // 硬編碼初始名單 (若管理者尚未新增自訂名單時的預設值)
     const squadEmployeesDefault = {
         S1: ["方慎之","陳泰安","蔡南嘉","李珮菁","朱建穎","王泳淇","吳峻霖","黃詠綺","蘭狄","凱文","勞倫司","安東尼","明華","艾麥倫","邱立斯","拉特","羅內爾","艾佛森"],
         S2: ["黃正忠","張韶眞","陳宥庠","黃威翔","羅翊禎","黃文靖","蔡易良","吳奇玲","詹姆士","達力","山博","羅傑","達路","童氏蓮","羅德","達布","安吉","羅蘭多"],
@@ -694,7 +700,6 @@
         S4: ["陳喬志","楊代億","廖曉彤","蔡靜儀","賴建亦","施榮傑","陰其德","黃譯鋒","楊雅婷","羅啟倫","埃爾默","拉斯特","雷伊","漢斯","達利斯","甘達","特拉多","達爾文"]
     };
 
-    // 各班管理員
     const squadManagers = {
         S1: "方慎之",
         S2: "黃正忠",
@@ -755,7 +760,6 @@
     const totalLvDisplay = document.getElementById('totalLvDisplay');
     const totalUaDisplay = document.getElementById('totalUaDisplay');
 
-    // 跑馬燈相關 DOM
     const editMarqueeBtn = document.getElementById('editMarqueeBtn');
     const marqueeModal = document.getElementById('marqueeModal');
     const marqueeInput = document.getElementById('marqueeInput');
@@ -764,7 +768,6 @@
     const marqueeErrorMsg = document.getElementById('marqueeErrorMsg');
     const marqueeText = document.getElementById('marqueeText');
 
-    // ✨ 管理人員相關 DOM
     const editEmployeeBtn = document.getElementById('editEmployeeBtn');
     const employeeModal = document.getElementById('employeeModal');
     const empModalTitle = document.getElementById('empModalTitle');
@@ -772,6 +775,10 @@
     const saveEmpBtn = document.getElementById('saveEmpBtn');
     const cancelEmpBtn = document.getElementById('cancelEmpBtn');
     const empErrorMsg = document.getElementById('empErrorMsg');
+
+    // 新增：隱藏備註與跑馬燈按鈕
+    const toggleNotesMarqueeBtn = document.getElementById('toggleNotesMarqueeBtn');
+    const marqueeContainer = document.getElementById('marqueeContainer');
 
     function showSync() { syncStatus.style.display = 'block'; }
     function hideSync() { syncStatus.style.display = 'none'; }
@@ -793,7 +800,8 @@
     async function fetchCloudData() {
         showSync();
         try {
-            const resp = await fetch(`${GAS_WEB_APP_URL}?action=getAllData`);
+            const timestamp = new Date().getTime();
+            const resp = await fetch(`${GAS_WEB_APP_URL}?action=getAllData&t=${timestamp}`);
             const data = await resp.json();
             if (data) cloudData = data;
             if (cloudData.settings) {
@@ -827,8 +835,7 @@
         try {
             await fetch(GAS_WEB_APP_URL, {
                 method: 'POST',
-                mode: 'no-cors',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                 body: JSON.stringify(payload)
             });
         } catch (err) {
@@ -852,7 +859,6 @@
         return (cloudData.settings && cloudData.settings[key]) ? cloudData.settings[key] : {};
     }
 
-    // ✨ 獲取當前班表人員清單（雲端優先，沒有則讀取硬編碼）
     function getEmployeeList(squad) {
         const key = squad + '_employees';
         if (cloudData.settings && cloudData.settings[key]) {
@@ -862,6 +868,11 @@
             } catch(e) { /* 解析失敗則回退 */ }
         }
         return squadEmployeesDefault[squad] || [];
+    }
+
+    // 讀取隱藏備註與跑馬燈設定
+    function getHideNotesMarquee() {
+        return cloudData.settings && cloudData.settings['hideMarqueeAndNotes'] === 'true';
     }
 
     function updateFormStatusUI() {
@@ -889,7 +900,6 @@
         updateHighlightBtnUI();
     });
 
-    // ✅ 完美修正：使用 getBoundingClientRect 計算物理座標
     const tableContainer = document.querySelector('.table-container');
     tableContainer.addEventListener('mouseover', function(e) {
         if (!crosshairEnabled) return;
@@ -943,6 +953,18 @@
         renderTable();
     });
 
+    // 新增按鈕事件
+    toggleNotesMarqueeBtn.addEventListener('click', async function() {
+        if (!currentUser || currentUser !== squadManagers[currentSquad]) return;
+        const current = getHideNotesMarquee();
+        const newState = !current;
+        if (!cloudData.settings) cloudData.settings = {};
+        cloudData.settings['hideMarqueeAndNotes'] = newState ? 'true' : 'false';
+        await postCloudData({ action: 'saveSetting', key: 'hideMarqueeAndNotes', value: newState ? 'true' : 'false' });
+        // 重新渲染
+        renderTable();
+    });
+
     function getS4Default(year, month, day) {
         const shiftCycle = ['日', '夜', '夜', '日', '日', '夜', '夜', '日', '日', '夜', '夜', '日'];
         const utcEpoch = Date.UTC(2025, 11, 31);
@@ -977,11 +999,11 @@
         return '';
     }
 
-    // ✨ 調整：全班統計現在讀取雲端或硬編碼中的動態名單
     function calculateTotalClassStats(squad, year, month, daysInMonth) {
         const empList = getEmployeeList(squad);
         if (!empList) return;
         let grandTotalOt = 0, grandTotalLv = 0, grandTotalUa = 0;
+        const lvTypes = ['特', '病', '事', '生', '婚', '喪', '公'];
         empList.forEach(empName => {
             for (let i = 1; i <= daysInMonth; i++) {
                 const shiftKey = `${squad}_shift_${year}_${month}_${empName}_${i}`;
@@ -994,7 +1016,7 @@
                     val = (savedValue !== undefined && savedValue !== null) ? savedValue : defaultShift;
                 }
                 if (val === 'G') grandTotalOt++;
-                if (['特', '病', '事', '生'].includes(val)) grandTotalLv++;
+                if (lvTypes.includes(val)) grandTotalLv++;
                 if (val === '未') grandTotalUa++;
             }
         });
@@ -1003,7 +1025,6 @@
         if (totalUaDisplay) totalUaDisplay.textContent = `加班未到: ${grandTotalUa}天`;
     }
 
-    // ✨ 調整：每日加班統計現在讀取動態名單
     function calculateDailyOtStats(squad, year, month, daysInMonth) {
         const empList = getEmployeeList(squad);
         if (!empList) return;
@@ -1080,7 +1101,7 @@
                 promises.push(fetch(GAS_WEB_APP_URL, {
                     method: 'POST',
                     mode: 'no-cors',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
                     body: JSON.stringify({ action: 'saveShift', key: key, value: val })
                 }));
             }
@@ -1116,11 +1137,18 @@
 
         otLimitGroup.style.display = (isMySquad && isManagerOfMy && formOpen) ? 'flex' : 'none';
         
-        // 判斷跑馬燈與管理人員權限
         editMarqueeBtn.style.display = (isMySquad && isManagerOfMy) ? '' : 'none';
         editEmployeeBtn.style.display = (isMySquad && isManagerOfMy) ? '' : 'none';
 
-        // 跑馬燈文字載入
+        // 顯示隱藏按鈕僅對管理者
+        toggleNotesMarqueeBtn.style.display = (isMySquad && isManagerOfMy) ? '' : 'none';
+        const hide = getHideNotesMarquee();
+        toggleNotesMarqueeBtn.textContent = hide ? '顯示備註與跑馬燈' : '隱藏備註與跑馬燈';
+
+        // 控制跑馬燈顯示
+        marqueeContainer.style.display = hide ? 'none' : 'block';
+
+        // 跑馬燈文字
         const defaultMarquee = `※"G"→加班；"C"→加班費1倍；"換"→換班日(不加班)；"歲"→歲修(不上班)；"旺"→尾牙(不上班)。`;
         if (cloudData.settings && cloudData.settings['marqueeText']) {
             marqueeText.textContent = cloudData.settings['marqueeText'];
@@ -1147,12 +1175,19 @@
         const tbody = document.getElementById('tableBody');
         thead.innerHTML = ''; tbody.innerHTML = '';
 
-        let trMark = document.createElement('tr');
-        trMark.innerHTML = `
-            <th class="stats-ot" rowspan="3"><div class="cell-content">當月<br>加班</div></th>
-            <th class="stats-lv" rowspan="3"><div class="cell-content">當月<br>請假</div></th>
-            <th class="col-name"><div class="cell-content">${viewSquad}</div></th>
-        `;
+        // 若隱藏備註，則不生成 trMark（第一行備註列）
+        const showNotes = !hide;
+
+        let trMark = null;
+        if (showNotes) {
+            trMark = document.createElement('tr');
+            trMark.innerHTML = `
+                <th class="stats-ot" rowspan="3"><div class="cell-content">當月<br>加班</div></th>
+                <th class="stats-lv" rowspan="3"><div class="cell-content">當月<br>請假</div></th>
+                <th class="col-name"><div class="cell-content">${viewSquad}</div></th>
+            `;
+        }
+
         let trDate = document.createElement('tr');
         trDate.innerHTML = `<th class="col-name"><div class="cell-content">日期</div></th>`;
         let trDay = document.createElement('tr');
@@ -1171,26 +1206,28 @@
             const dayOfWeek = dateObj.getDay();
             const isToday = (year === todayY && month === todayM && i === todayD);
 
-            let thMark = document.createElement('th');
-            let selectMark = document.createElement('select');
-            selectMark.className = 'daily-mark-select';
-            ['', 'C', '颱', '豪', '歲', '旺'].forEach(opt => {
-                let option = document.createElement('option');
-                option.value = opt;
-                option.textContent = opt;
-                selectMark.appendChild(option);
-            });
-            selectMark.value = dailyMarks[markKey] || '';
-            selectMark.disabled = !(isMySquad && isManagerOfMy);
-            selectMark.addEventListener('change', function() {
-                if (!isMySquad || !isManagerOfMy) return;
-                const newMark = this.value;
-                dailyMarks[markKey] = newMark;
-                cloudData.settings[viewSquad + '_dailyMarks'] = dailyMarks;
-                postCloudData({ action: 'saveSetting', key: viewSquad + '_dailyMarks', value: JSON.stringify(dailyMarks) });
-            });
-            thMark.appendChild(selectMark);
-            trMark.appendChild(thMark);
+            if (showNotes) {
+                let thMark = document.createElement('th');
+                let selectMark = document.createElement('select');
+                selectMark.className = 'daily-mark-select';
+                ['', 'C', '颱', '豪', '歲', '旺', '換'].forEach(opt => {
+                    let option = document.createElement('option');
+                    option.value = opt;
+                    option.textContent = opt;
+                    selectMark.appendChild(option);
+                });
+                selectMark.value = dailyMarks[markKey] || '';
+                selectMark.disabled = !(isMySquad && isManagerOfMy);
+                selectMark.addEventListener('change', function() {
+                    if (!isMySquad || !isManagerOfMy) return;
+                    const newMark = this.value;
+                    dailyMarks[markKey] = newMark;
+                    cloudData.settings[viewSquad + '_dailyMarks'] = dailyMarks;
+                    postCloudData({ action: 'saveSetting', key: viewSquad + '_dailyMarks', value: JSON.stringify(dailyMarks) });
+                });
+                thMark.appendChild(selectMark);
+                trMark.appendChild(thMark);
+            }
 
             let thDate = document.createElement('th');
             thDate.innerHTML = `<div class="cell-content">${i}</div>`;
@@ -1204,11 +1241,12 @@
             trDay.appendChild(thDay);
         }
 
-        thead.appendChild(trMark);
+        if (showNotes) {
+            thead.appendChild(trMark);
+        }
         thead.appendChild(trDate);
         thead.appendChild(trDay);
 
-        // ✨ 改用動態取得名單
         let allEmployees = getEmployeeList(viewSquad);
         let visibleEmployees;
         if (isMySquad) {
@@ -1216,6 +1254,8 @@
         } else {
             visibleEmployees = allEmployees;
         }
+
+        const extraLeaveTypes = ['婚', '喪', '公'];
 
         visibleEmployees.forEach(empName => {
             let tr = document.createElement('tr');
@@ -1250,6 +1290,9 @@
                     baseOptions = ['', 'G', '未'];
                 } else {
                     baseOptions = [defaultShift, '特', '病', '事', '生', '颱', '返', '差', '曠'];
+                    extraLeaveTypes.forEach(opt => {
+                        if (!baseOptions.includes(opt)) baseOptions.push(opt);
+                    });
                 }
                 const isCurrentManager = (isMySquad && currentUser === squadManagers[viewSquad]);
                 if (!isCurrentManager) {
@@ -1278,7 +1321,6 @@
                     if (newVal === 'G' && defaultShift === '' && limitVal !== '') {
                         const limit = parseInt(limitVal, 10);
                         let otherOtCount = 0;
-                        // ✨ 改成動態取得名單計算加班上限
                         let empList = getEmployeeList(viewSquad);
                         empList.forEach(otherEmp => {
                             if (otherEmp === empName) return;
@@ -1350,6 +1392,7 @@
 
     function calculateStats(empName, squad, year, month, daysInMonth, otCellId, lvCellId) {
         let otCount = 0, lvCount = 0;
+        const lvTypes = ['特', '病', '事', '生', '婚', '喪', '公'];
         for (let i = 1; i <= daysInMonth; i++) {
             const shiftKey = `${squad}_shift_${year}_${month}_${empName}_${i}`;
             const defaultShift = getDefaultShift(squad, year, month, i);
@@ -1361,7 +1404,7 @@
                 val = (savedValue !== undefined && savedValue !== null) ? savedValue : defaultShift;
             }
             if (val === 'G') otCount++;
-            if (['特', '病', '事', '生'].includes(val)) lvCount++;
+            if (lvTypes.includes(val)) lvCount++;
         }
         const otElem = document.getElementById(otCellId);
         const lvElem = document.getElementById(lvCellId);
@@ -1370,7 +1413,7 @@
     }
 
     function updateCellColor(td, value) {
-        td.classList.remove('shift-day', 'shift-night', 'shift-g', 'shift-unattended', 'shift-special', 'shift-personal', 'shift-sick', 'shift-physio', 'shift-typhoon', 'shift-return', 'shift-business', 'shift-absent');
+        td.classList.remove('shift-day', 'shift-night', 'shift-g', 'shift-unattended', 'shift-special', 'shift-personal', 'shift-sick', 'shift-physio', 'shift-typhoon', 'shift-return', 'shift-business', 'shift-absent', 'shift-marriage', 'shift-mourning', 'shift-public');
         switch (value) {
             case '日': td.classList.add('shift-day'); break;
             case '夜': td.classList.add('shift-night'); break;
@@ -1384,6 +1427,9 @@
             case '返': td.classList.add('shift-return'); break;
             case '差': td.classList.add('shift-business'); break;
             case '曠': td.classList.add('shift-absent'); break;
+            case '婚': td.classList.add('shift-marriage'); break;
+            case '喪': td.classList.add('shift-mourning'); break;
+            case '公': td.classList.add('shift-public'); break;
         }
     }
 
@@ -1411,6 +1457,10 @@
             loginErrorMsg.style.display = 'block';
             return;
         }
+
+        showSync();
+        await fetchCloudData();
+
         const correctPwd = getUserPassword(selectedUser);
         if (inputPwd === correctPwd) {
             currentSquad = squad;
@@ -1421,8 +1471,7 @@
             loginErrorMsg.style.display = 'none';
             loginPasswordInput.value = '';
             viewSquadSelect.value = squad;
-            showSync();
-            await fetchCloudData();
+            
             loginOverlay.style.display = 'none';
             mainApp.style.display = 'block';
             userInfoDisplay.textContent = `👤 ${currentUser} (${currentSquad})`;
@@ -1430,15 +1479,18 @@
             updateHighlightBtnUI();
             renderTable();
         } else {
+            loginErrorMsg.textContent = "請選擇班級、姓名或密碼錯誤！";
             loginErrorMsg.style.display = 'block';
+            hideSync();
         }
     });
 
     async function checkLoginStatus() {
+        await fetchCloudData();
+        
         const savedSquad = sessionStorage.getItem('schedule_current_squad');
         const savedUser = sessionStorage.getItem('schedule_current_user');
         if (savedSquad && savedUser) {
-            await fetchCloudData();
             currentSquad = savedSquad;
             currentUser = savedUser;
             currentViewSquad = savedSquad;
@@ -1483,11 +1535,17 @@
         if(!cloudData.passwords) cloudData.passwords = {};
         cloudData.passwords[currentUser] = newVal;
         await postCloudData({ action: 'savePassword', key: currentUser, value: newVal });
+        await fetchCloudData();
+        if (cloudData.passwords[currentUser] !== newVal) {
+            pwdErrorMsg.textContent = "密碼保存失敗，請檢查網路或重新嘗試！";
+            pwdErrorMsg.style.display = "block";
+            return;
+        }
         alert("密碼修改成功！");
         changePwdModal.style.display = 'none';
     });
 
-    // 【跑馬燈邏輯】
+    // 跑馬燈邏輯
     editMarqueeBtn.addEventListener('click', function() {
         marqueeInput.value = marqueeText.textContent;
         marqueeErrorMsg.style.display = 'none';
@@ -1508,10 +1566,10 @@
         marqueeModal.style.display = 'none';
     });
 
-    // ✨ 【管理班表人員邏輯】
+    // 管理班表人員邏輯
     editEmployeeBtn.addEventListener('click', function() {
         const currentList = getEmployeeList(currentSquad);
-        employeeListInput.value = currentList.join('\n'); // 用換行符號分割顯示
+        employeeListInput.value = currentList.join('\n');
         empErrorMsg.style.display = 'none';
         empModalTitle.textContent = `管理班表人員 (${currentSquad})`;
         employeeModal.style.display = 'flex';
@@ -1519,28 +1577,21 @@
     cancelEmpBtn.addEventListener('click', () => employeeModal.style.display = 'none');
     saveEmpBtn.addEventListener('click', async function() {
         const rawText = employeeListInput.value;
-        // 切分並且過濾空白行
         let newList = rawText.split(/\r?\n/).map(n => n.trim()).filter(n => n !== '');
-        
         if (newList.length === 0) {
             empErrorMsg.textContent = "名單不可為空！至少需要一個人。";
             empErrorMsg.style.display = "block"; return;
         }
-
-        // (貼心設計) 確保管理員自己一定在名單中，如果手誤刪除會自動補上
         const manager = squadManagers[currentSquad];
         if (!newList.includes(manager)) {
-            newList.unshift(manager); // 把管理員放到第一順位
+            newList.unshift(manager);
         }
-
-        // 存成 JSON 字串到雲端
         if(!cloudData.settings) cloudData.settings = {};
         cloudData.settings[currentSquad + '_employees'] = JSON.stringify(newList);
         await postCloudData({ action: 'saveSetting', key: currentSquad + '_employees', value: JSON.stringify(newList) });
-        
         alert(`人員名單已更新！共 ${newList.length} 人。`);
         employeeModal.style.display = 'none';
-        renderTable(); // 立即重整頁面
+        renderTable();
     });
 
     logoutBtn.addEventListener('click', function() {
