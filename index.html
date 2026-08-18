@@ -1146,7 +1146,7 @@
         }
     });
 
-    // ✨ 個人統計（當月 + 年度合計）
+    // ✨ 個人統計（當月 + 年度合計）- 強化下拉選單互動
     function populateStatsSummary() {
         if (!currentUser || !currentViewSquad) {
             statsSummary.style.display = 'none';
@@ -1165,11 +1165,23 @@
         const month = parseInt(monthSelect.value);
         const empList = getEmployeeList(currentViewSquad);
 
-        // 確保下拉選單可選
-        statsPersonSelect.disabled = false;
+        // 如果列表為空，隱藏面板
+        if (empList.length === 0) {
+            statsSummary.style.display = 'none';
+            return;
+        }
 
-        // 填充下拉選單
+        // === 關鍵修正：強制啟用下拉選單 ===
+        statsPersonSelect.removeAttribute('disabled');
+        statsPersonSelect.disabled = false;
+        statsPersonSelect.style.pointerEvents = 'auto';
+        statsPersonSelect.style.opacity = '1';
+        statsPersonSelect.style.cursor = 'pointer';
+
+        // 保存當前選中值
         const currentSelected = statsPersonSelect.value;
+        
+        // 清空並重新填充選項
         statsPersonSelect.innerHTML = '';
         empList.forEach(emp => {
             const opt = document.createElement('option');
@@ -1178,13 +1190,7 @@
             statsPersonSelect.appendChild(opt);
         });
 
-        // 如果列表為空，隱藏面板
-        if (empList.length === 0) {
-            statsSummary.style.display = 'none';
-            return;
-        }
-
-        // 預設選中當前用戶（管理員本人），若不在列表中則選第一個
+        // 設定選中值（優先選中管理員本人，否則選中當前值，否則選第一個）
         if (empList.includes(currentUser)) {
             statsPersonSelect.value = currentUser;
         } else if (currentSelected && empList.includes(currentSelected)) {
@@ -1192,6 +1198,9 @@
         } else {
             statsPersonSelect.value = empList[0];
         }
+
+        // 確保事件監聽綁定（若遺失則重新綁定）
+        statsPersonSelect.onchange = populateStatsSummary;
 
         const selectedEmp = statsPersonSelect.value;
         if (!selectedEmp) return;
@@ -1238,7 +1247,7 @@
         statsYearUa.textContent = yearUa;
     }
 
-    // 人員下拉變更時重新統計
+    // 人員下拉變更時重新統計（已綁定 onchange，此為額外安全綁定）
     statsPersonSelect.addEventListener('change', populateStatsSummary);
 
     function renderTable() {
