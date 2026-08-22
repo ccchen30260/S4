@@ -654,6 +654,13 @@
             <label for="loginPasswordInput">密碼</label>
             <input type="password" id="loginPasswordInput" placeholder="預設密碼：0000">
         </div>
+        <div class="login-field">
+            <label for="loginModeSelect">登入模式</label>
+            <select id="loginModeSelect">
+                <option value="view">檢視模式(View mode)</option>
+                <option value="edit" selected>編輯模式(Edit mode)</option>
+            </select>
+        </div>
         <button id="loginSubmitBtn" class="login-btn">登入</button>
         <div style="margin: 12px 0; color: #8e8e93;">或</div>
         <button id="superLoginBtn" class="login-btn super-btn">👑 總管理員登入</button>
@@ -668,6 +675,13 @@
         <div class="login-field">
             <label for="superPasswordInput">密碼</label>
             <input type="password" id="superPasswordInput" placeholder="請輸入總管理員密碼">
+        </div>
+        <div class="login-field">
+            <label for="superModeSelect">登入模式</label>
+            <select id="superModeSelect">
+                <option value="view">檢視模式(View mode)</option>
+                <option value="edit" selected>編輯模式(Edit mode)</option>
+            </select>
         </div>
         <div style="display: flex; gap: 10px; margin-top: 15px;">
             <button id="cancelSuperLoginBtn" class="login-btn" style="background-color: #6c757d;">取消</button>
@@ -791,7 +805,7 @@
                     <option value="7">7</option>
                 </select>
             </div>
-            <div class="total-stats-group">
+            <div class="total-stats-group" id="totalStatsGroup">
                 <span id="totalOtDisplay" class="stat-badge stat-badge-ot">全班加班: 0天</span>
                 <span id="totalLvDisplay" class="stat-badge stat-badge-lv">全班請假: 0天</span>
                 <span id="totalUaDisplay" class="stat-badge stat-badge-ua">加班未到: 0天</span>
@@ -821,7 +835,7 @@
 </div>
 
 <script>
-    // ===== 以下 JavaScript 包含變更記錄與總管理員功能 =====
+    // ===== 以下 JavaScript 包含變更記錄與總管理員、模式選擇功能 =====
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzke3WV4JqpmJVgur8fCN9jmP0HjQ6KXyoTCcZfBVZl1fLGO4VEjMgWAnPX5_AaqPjf/exec";
 
     const squadEmployeesDefault = {
@@ -838,10 +852,9 @@
         S4: "陳喬志"
     };
 
-    // ===== 總管理員 =====
     const superManager = "林素瑛";
+    let currentMode = 'edit'; // 'view' 或 'edit'
 
-    // 判斷使用者是否為該班管理員（包含總管理員）
     function isManagerOf(squad, user) {
         return user === squadManagers[squad] || user === superManager;
     }
@@ -849,14 +862,13 @@
     const weekDaysTW = ["日", "一", "二", "三", "四", "五", "六"];
 
     let cloudData = { shifts: {}, passwords: {}, otLimits: {}, settings: {} };
-    let pendingChanges = {}; // { shiftKey: { newValue, oldValue } }
+    let pendingChanges = {};
 
     let currentUser = null;
     let currentSquad = null;
     let currentViewSquad = null;
     let crosshairEnabled = false; 
 
-    // 取得台北時間字串 (YYYY/MM/DD HH:mm:ss)
     function getTaipeiTimeString() {
         const now = new Date();
         const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
@@ -875,11 +887,13 @@
     const loginSquadSelect = document.getElementById('loginSquadSelect');
     const loginNameSelect = document.getElementById('loginNameSelect');
     const loginPasswordInput = document.getElementById('loginPasswordInput');
+    const loginModeSelect = document.getElementById('loginModeSelect');
     const loginSubmitBtn = document.getElementById('loginSubmitBtn');
     const loginErrorMsg = document.getElementById('loginErrorMsg');
     const superLoginBtn = document.getElementById('superLoginBtn');
     const superLoginModal = document.getElementById('superLoginModal');
     const superPasswordInput = document.getElementById('superPasswordInput');
+    const superModeSelect = document.getElementById('superModeSelect');
     const confirmSuperLoginBtn = document.getElementById('confirmSuperLoginBtn');
     const cancelSuperLoginBtn = document.getElementById('cancelSuperLoginBtn');
     const superLoginErrorMsg = document.getElementById('superLoginErrorMsg');
@@ -912,6 +926,7 @@
     const monthSelect = document.getElementById('monthSelect');
     const otLimitSelect = document.getElementById('otLimitSelect');
     const otLimitGroup = document.getElementById('otLimitGroup');
+    const totalStatsGroup = document.getElementById('totalStatsGroup');
     const toggleStatsBtn = document.getElementById('toggleStatsBtn');
     const viewSquadSelect = document.getElementById('viewSquadSelect');
 
@@ -938,7 +953,25 @@
     function showSync() { syncStatus.style.display = 'block'; }
     function hideSync() { syncStatus.style.display = 'none'; }
 
-    // 登入班級選擇：只顯示該班人員，不添加總管理員
+    function applyModeUI() {
+        if (currentMode === 'view') {
+            // 檢視模式：只留姓名、年份、月份、查看班表、隱藏統計、登出
+            changePwdBtn.style.display = 'none';
+            otLimitGroup.style.display = 'none';
+            totalStatsGroup.style.display = 'none';
+            highlightBtn.style.display = 'none';
+            formStatusBtn.style.display = 'none';
+            editMarqueeBtn.style.display = 'none';
+            editEmployeeBtn.style.display = 'none';
+            // 隱藏確認按鈕（不應出現在 view 模式）
+            confirmBtn.style.display = 'none';
+        } else {
+            // 編輯模式：依權限顯示
+            changePwdBtn.style.display = '';
+            // otLimitGroup, highlightBtn, formStatusBtn 等由 renderTable 動態控制
+        }
+    }
+
     loginSquadSelect.addEventListener('change', function() {
         const squad = this.value;
         loginNameSelect.innerHTML = '<option value="">-- 請選擇姓名 --</option>';
@@ -953,7 +986,6 @@
         loginNameSelect.value = '';
     });
 
-    // 總管理員登入按鈕
     superLoginBtn.addEventListener('click', function() {
         superPasswordInput.value = '';
         superLoginErrorMsg.style.display = 'none';
@@ -966,6 +998,7 @@
 
     confirmSuperLoginBtn.addEventListener('click', async function() {
         const inputPwd = superPasswordInput.value;
+        const mode = superModeSelect.value;
         if (!inputPwd) {
             superLoginErrorMsg.textContent = "請輸入密碼！";
             superLoginErrorMsg.style.display = 'block';
@@ -978,8 +1011,10 @@
             currentUser = superManager;
             currentSquad = 'S1';
             currentViewSquad = 'S1';
+            currentMode = mode;
             sessionStorage.setItem('schedule_current_squad', 'S1');
             sessionStorage.setItem('schedule_current_user', superManager);
+            sessionStorage.setItem('schedule_current_mode', mode);
             superLoginErrorMsg.style.display = 'none';
             superPasswordInput.value = '';
             superLoginModal.style.display = 'none';
@@ -987,6 +1022,7 @@
             mainApp.style.display = 'block';
             userInfoDisplay.textContent = `👤 ${superManager} (總管理員)`;
             viewSquadSelect.value = 'S1';
+            applyModeUI();
             updateFormStatusUI();
             updateHighlightBtnUI();
             renderTable();
@@ -1077,7 +1113,11 @@
         const open = isFormOpen(currentViewSquad);
         formStatusBtn.textContent = open ? '填表：開啟' : '填表：關閉';
         formStatusBtn.className = 'form-status-btn ' + (open ? 'open' : 'closed');
-        formStatusBtn.style.display = (isManager && (isMySquad || currentUser === superManager)) ? '' : 'none';
+        if (currentMode === 'view') {
+            formStatusBtn.style.display = 'none';
+        } else {
+            formStatusBtn.style.display = (isManager && (isMySquad || currentUser === superManager)) ? '' : 'none';
+        }
     }
 
     function updateHighlightBtnUI() {
@@ -1087,6 +1127,15 @@
         highlightBtn.textContent = crosshairEnabled ? '十字高亮：開' : '十字高亮：關';
         highlightBtn.className = 'highlight-btn' + (crosshairEnabled ? ' active' : '');
         document.body.classList.toggle('crosshair-active', crosshairEnabled);
+        if (currentMode === 'view') {
+            highlightBtn.style.display = 'none';
+            document.body.classList.remove('crosshair-active'); // 關閉高亮
+        } else {
+            // 顯示由 applyModeUI 處理，但這裡確保如果 view 模式已隱藏，不要被覆蓋
+            if (currentMode === 'edit') {
+                highlightBtn.style.display = isManager ? '' : 'none';
+            }
+        }
     }
 
     highlightBtn.addEventListener('click', function() {
@@ -1097,7 +1146,7 @@
 
     const tableContainer = document.querySelector('.table-container');
     tableContainer.addEventListener('mouseover', function(e) {
-        if (!crosshairEnabled) return;
+        if (!crosshairEnabled || currentMode === 'view') return;
         const targetCell = e.target.closest('th, td');
         if (!targetCell) return;
 
@@ -1138,7 +1187,7 @@
     });
 
     tableContainer.addEventListener('mouseleave', function() {
-        if (!crosshairEnabled) return;
+        if (!crosshairEnabled || currentMode === 'view') return;
         document.querySelectorAll('.crosshair-highlight').forEach(el => el.classList.remove('crosshair-highlight'));
     });
 
@@ -1242,6 +1291,10 @@
     }
 
     function updateConfirmBtnState() {
+        if (currentMode === 'view') {
+            confirmBtn.style.display = 'none';
+            return;
+        }
         if (!currentSquad || !currentViewSquad || currentViewSquad !== currentSquad) {
             confirmBtn.style.display = 'none';
             return;
@@ -1318,15 +1371,41 @@
         const isMySquad = (viewSquad === currentSquad);
         const isManagerOfView = isManagerOf(viewSquad, currentUser);
         const isManagerOfMy = isManagerOf(currentSquad, currentUser);
-        const readOnly = !isManagerOfView; // 只要對當前班級有管理權限就可編輯
+        const formOpen = isFormOpen(viewSquad);
 
         updateFormStatusUI();
         updateHighlightBtnUI();
-        const formOpen = isFormOpen(viewSquad);
+        applyModeUI(); // 確保檢視模式隱藏控件
 
-        otLimitGroup.style.display = (isManagerOfView && formOpen) ? 'flex' : 'none';
-        editMarqueeBtn.style.display = (isManagerOfView) ? '' : 'none';
-        editEmployeeBtn.style.display = (isManagerOfView) ? '' : 'none';
+        // 根據模式決定唯讀
+        let readOnly = !isManagerOfView;
+        if (currentMode === 'view') {
+            readOnly = true;
+        }
+
+        // 顯示人員範圍
+        let allEmployees = getEmployeeList(viewSquad);
+        let visibleEmployees;
+        if (currentMode === 'view') {
+            visibleEmployees = allEmployees;
+        } else {
+            if (isMySquad) {
+                visibleEmployees = isManagerOfMy ? allEmployees : [currentUser];
+            } else {
+                visibleEmployees = allEmployees;
+            }
+        }
+
+        // 控制項顯示
+        if (currentMode === 'edit') {
+            otLimitGroup.style.display = (isManagerOfView && formOpen) ? 'flex' : 'none';
+            editMarqueeBtn.style.display = isManagerOfView ? '' : 'none';
+            editEmployeeBtn.style.display = isManagerOfView ? '' : 'none';
+        } else {
+            otLimitGroup.style.display = 'none';
+            editMarqueeBtn.style.display = 'none';
+            editEmployeeBtn.style.display = 'none';
+        }
 
         const defaultMarquee = `※"G"→加班；"C"→加班費1倍；"換"→換班日(不加班)；"歲"→歲修(不上班)；"旺"→尾牙(不上班)。`;
         if (cloudData.settings && cloudData.settings['marqueeText']) {
@@ -1388,9 +1467,9 @@
                 selectMark.appendChild(option);
             });
             selectMark.value = dailyMarks[markKey] || '';
-            selectMark.disabled = !(isManagerOfView);
+            selectMark.disabled = (currentMode === 'view') ? true : !(isManagerOfView);
             selectMark.addEventListener('change', function() {
-                if (!isManagerOfView) return;
+                if (currentMode === 'view' || !isManagerOfView) return;
                 const newMark = this.value;
                 dailyMarks[markKey] = newMark;
                 cloudData.settings[viewSquad + '_dailyMarks'] = dailyMarks;
@@ -1414,15 +1493,6 @@
         thead.appendChild(trMark);
         thead.appendChild(trDate);
         thead.appendChild(trDay);
-
-        let allEmployees = getEmployeeList(viewSquad);
-        let visibleEmployees;
-        if (isMySquad) {
-            visibleEmployees = isManagerOfMy ? allEmployees : [currentUser];
-        } else {
-            // 查看其他班時，如果是總管理員則顯示全部並可編輯，否則唯讀顯示全部
-            visibleEmployees = allEmployees;
-        }
 
         const extraLeaveTypes = ['婚', '喪', '公'];
 
@@ -1448,7 +1518,6 @@
 
                 let select = document.createElement('select');
                 select.className = 'shift-select';
-                // 唯讀條件：沒有管理權限或填表關閉
                 if (readOnly || !formOpen) {
                     select.disabled = true;
                 }
@@ -1462,7 +1531,6 @@
                         if (!baseOptions.includes(opt)) baseOptions.push(opt);
                     });
                 }
-                // 只有管理員才能選擇「未」
                 if (!isManagerOfView) {
                     baseOptions = baseOptions.filter(opt => opt !== '未');
                 }
@@ -1504,7 +1572,6 @@
                         }
                     }
 
-                    // 管理員（含總管理員）直接儲存，附帶舊值
                     if (isManagerOfView) {
                         const oldValue = finalValue;
                         if (!cloudData.shifts) cloudData.shifts = {};
@@ -1521,7 +1588,6 @@
                         updateCellColor(td, newVal);
                         renderTable();
                     } else {
-                        // 一般員工暫存變更
                         pendingChanges[shiftKey] = { newValue: newVal, oldValue: finalValue };
                         finalValue = newVal;
                         td.classList.add('pending-edit');
@@ -1609,7 +1675,7 @@
     viewSquadSelect.addEventListener('change', function() {
         const newSquad = this.value;
         if (newSquad === currentViewSquad) return;
-        if (currentViewSquad === currentSquad && Object.keys(pendingChanges).length > 0 && !isManagerOf(currentSquad, currentUser)) {
+        if (currentMode === 'edit' && currentViewSquad === currentSquad && Object.keys(pendingChanges).length > 0 && !isManagerOf(currentSquad, currentUser)) {
             if (!confirm('切換班表將捨棄目前未儲存的變更，確定要繼續嗎？')) {
                 this.value = currentViewSquad;
                 return;
@@ -1626,6 +1692,7 @@
         const squad = loginSquadSelect.value;
         const selectedUser = loginNameSelect.value;
         const inputPwd = loginPasswordInput.value;
+        const mode = loginModeSelect.value;
         if (!squad || !selectedUser) {
             loginErrorMsg.style.display = 'block';
             return;
@@ -1639,8 +1706,10 @@
             currentSquad = squad;
             currentUser = selectedUser;
             currentViewSquad = squad;
+            currentMode = mode;
             sessionStorage.setItem('schedule_current_squad', squad);
             sessionStorage.setItem('schedule_current_user', selectedUser);
+            sessionStorage.setItem('schedule_current_mode', mode);
             loginErrorMsg.style.display = 'none';
             loginPasswordInput.value = '';
             viewSquadSelect.value = squad;
@@ -1648,6 +1717,7 @@
             loginOverlay.style.display = 'none';
             mainApp.style.display = 'block';
             userInfoDisplay.textContent = `👤 ${currentUser} (${currentSquad})`;
+            applyModeUI();
             updateFormStatusUI();
             updateHighlightBtnUI();
             renderTable();
@@ -1663,14 +1733,17 @@
         
         const savedSquad = sessionStorage.getItem('schedule_current_squad');
         const savedUser = sessionStorage.getItem('schedule_current_user');
+        const savedMode = sessionStorage.getItem('schedule_current_mode') || 'edit';
         if (savedSquad && savedUser) {
             currentSquad = savedSquad;
             currentUser = savedUser;
             currentViewSquad = savedSquad;
+            currentMode = savedMode;
             viewSquadSelect.value = savedSquad;
             loginOverlay.style.display = 'none';
             mainApp.style.display = 'block';
             userInfoDisplay.textContent = (savedUser === superManager) ? `👤 ${superManager} (總管理員)` : `👤 ${savedUser} (${savedSquad})`;
+            applyModeUI();
             updateFormStatusUI();
             updateHighlightBtnUI();
             renderTable();
@@ -1739,7 +1812,7 @@
         marqueeModal.style.display = 'none';
     });
 
-    // 管理班表人員邏輯（總管理員可管理當前查看班級）
+    // 管理班表人員邏輯
     editEmployeeBtn.addEventListener('click', function() {
         const targetSquad = currentViewSquad || currentSquad;
         const currentList = getEmployeeList(targetSquad);
@@ -1772,6 +1845,7 @@
     logoutBtn.addEventListener('click', function() {
         sessionStorage.removeItem('schedule_current_squad');
         sessionStorage.removeItem('schedule_current_user');
+        sessionStorage.removeItem('schedule_current_mode');
         currentUser = null;
         currentSquad = null;
         currentViewSquad = null;
@@ -1783,6 +1857,7 @@
     });
 
     otLimitSelect.addEventListener('change', function() {
+        if (currentMode === 'view') return;
         if (!currentViewSquad) return;
         if (!isManagerOf(currentViewSquad, currentUser)) return;
         const year = yearSelect.value;
