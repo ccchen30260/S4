@@ -837,6 +837,20 @@
     let currentViewSquad = null;
     let crosshairEnabled = false; 
 
+    // ===== 新增：取得台北時間字串 =====
+    function getTaipeiTimeString() {
+        const now = new Date();
+        const utc = now.getTime() + (now.getTimezoneOffset() * 60000); // 轉為 UTC 毫秒
+        const taipei = new Date(utc + (8 * 3600000)); // 台北時間 UTC+8
+        const year = taipei.getFullYear();
+        const month = String(taipei.getMonth() + 1).padStart(2, '0');
+        const day = String(taipei.getDate()).padStart(2, '0');
+        const hours = String(taipei.getHours()).padStart(2, '0');
+        const minutes = String(taipei.getMinutes()).padStart(2, '0');
+        const seconds = String(taipei.getSeconds()).padStart(2, '0');
+        return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
+    }
+
     const syncStatus = document.getElementById('syncStatus');
     const loginOverlay = document.getElementById('loginOverlay');
     const loginSquadSelect = document.getElementById('loginSquadSelect');
@@ -1209,7 +1223,7 @@
                     value: change.newValue,
                     oldValue: change.oldValue,
                     user: currentUser,
-                    timestamp: new Date().toISOString()
+                    timestamp: getTaipeiTimeString()
                 }));
                 // 更新本地 cloudData
                 cloudData.shifts[key] = change.newValue;
@@ -1440,7 +1454,7 @@
                             value: newVal,
                             oldValue: oldValue,
                             user: currentUser,
-                            timestamp: new Date().toISOString()
+                            timestamp: getTaipeiTimeString()
                         });
                         finalValue = newVal;
                         updateCellColor(td, newVal);
