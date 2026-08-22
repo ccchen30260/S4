@@ -166,11 +166,18 @@
             transition: all 0.2s ease;
             letter-spacing: 0.5px;
         }
-
         .login-btn:hover {
             background: #0066d9;
             transform: translateY(-1px);
             box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
+        }
+        .login-btn.super-btn {
+            background: #ff9500;
+            margin-top: 12px;
+        }
+        .login-btn.super-btn:hover {
+            background: #e08600;
+            box-shadow: 0 4px 12px rgba(255, 149, 0, 0.3);
         }
 
         .login-error {
@@ -648,7 +655,25 @@
             <input type="password" id="loginPasswordInput" placeholder="預設密碼：0000">
         </div>
         <button id="loginSubmitBtn" class="login-btn">登入</button>
+        <div style="margin: 12px 0; color: #8e8e93;">或</div>
+        <button id="superLoginBtn" class="login-btn super-btn">👑 總管理員登入</button>
         <div id="loginErrorMsg" class="login-error">請選擇班級、姓名或密碼錯誤！</div>
+    </div>
+</div>
+
+<!-- 總管理員登入視窗 -->
+<div id="superLoginModal" class="login-overlay" style="display: none; z-index: 10000;">
+    <div class="login-card">
+        <h2>總管理員登入</h2>
+        <div class="login-field">
+            <label for="superPasswordInput">密碼</label>
+            <input type="password" id="superPasswordInput" placeholder="請輸入總管理員密碼">
+        </div>
+        <div style="display: flex; gap: 10px; margin-top: 15px;">
+            <button id="cancelSuperLoginBtn" class="login-btn" style="background-color: #6c757d;">取消</button>
+            <button id="confirmSuperLoginBtn" class="login-btn">登入</button>
+        </div>
+        <div id="superLoginErrorMsg" class="login-error"></div>
     </div>
 </div>
 
@@ -813,7 +838,7 @@
         S4: "陳喬志"
     };
 
-    // ===== 新增：總管理員 =====
+    // ===== 總管理員 =====
     const superManager = "林素瑛";
 
     // 判斷使用者是否為該班管理員（包含總管理員）
@@ -852,6 +877,12 @@
     const loginPasswordInput = document.getElementById('loginPasswordInput');
     const loginSubmitBtn = document.getElementById('loginSubmitBtn');
     const loginErrorMsg = document.getElementById('loginErrorMsg');
+    const superLoginBtn = document.getElementById('superLoginBtn');
+    const superLoginModal = document.getElementById('superLoginModal');
+    const superPasswordInput = document.getElementById('superPasswordInput');
+    const confirmSuperLoginBtn = document.getElementById('confirmSuperLoginBtn');
+    const cancelSuperLoginBtn = document.getElementById('cancelSuperLoginBtn');
+    const superLoginErrorMsg = document.getElementById('superLoginErrorMsg');
 
     const changePwdModal = document.getElementById('changePwdModal');
     const oldPwdInput = document.getElementById('oldPwdInput');
@@ -907,6 +938,7 @@
     function showSync() { syncStatus.style.display = 'block'; }
     function hideSync() { syncStatus.style.display = 'none'; }
 
+    // 登入班級選擇：只顯示該班人員，不添加總管理員
     loginSquadSelect.addEventListener('change', function() {
         const squad = this.value;
         loginNameSelect.innerHTML = '<option value="">-- 請選擇姓名 --</option>';
@@ -917,15 +949,52 @@
                 opt.textContent = emp;
                 loginNameSelect.appendChild(opt);
             });
-            // 新增總管理員選項（若尚未存在）
-            if (!squadEmployeesDefault[squad].includes(superManager)) {
-                let opt = document.createElement('option');
-                opt.value = superManager;
-                opt.textContent = superManager + ' (總管理員)';
-                loginNameSelect.appendChild(opt);
-            }
         }
         loginNameSelect.value = '';
+    });
+
+    // 總管理員登入按鈕
+    superLoginBtn.addEventListener('click', function() {
+        superPasswordInput.value = '';
+        superLoginErrorMsg.style.display = 'none';
+        superLoginModal.style.display = 'flex';
+    });
+
+    cancelSuperLoginBtn.addEventListener('click', function() {
+        superLoginModal.style.display = 'none';
+    });
+
+    confirmSuperLoginBtn.addEventListener('click', async function() {
+        const inputPwd = superPasswordInput.value;
+        if (!inputPwd) {
+            superLoginErrorMsg.textContent = "請輸入密碼！";
+            superLoginErrorMsg.style.display = 'block';
+            return;
+        }
+        showSync();
+        await fetchCloudData();
+        const correctPwd = getUserPassword(superManager);
+        if (inputPwd === correctPwd) {
+            currentUser = superManager;
+            currentSquad = 'S1';
+            currentViewSquad = 'S1';
+            sessionStorage.setItem('schedule_current_squad', 'S1');
+            sessionStorage.setItem('schedule_current_user', superManager);
+            superLoginErrorMsg.style.display = 'none';
+            superPasswordInput.value = '';
+            superLoginModal.style.display = 'none';
+            loginOverlay.style.display = 'none';
+            mainApp.style.display = 'block';
+            userInfoDisplay.textContent = `👤 ${superManager} (總管理員)`;
+            viewSquadSelect.value = 'S1';
+            updateFormStatusUI();
+            updateHighlightBtnUI();
+            renderTable();
+        } else {
+            superLoginErrorMsg.textContent = "密碼錯誤！";
+            superLoginErrorMsg.style.display = 'block';
+        }
+        hideSync();
     });
 
     async function fetchCloudData() {
@@ -1008,7 +1077,6 @@
         const open = isFormOpen(currentViewSquad);
         formStatusBtn.textContent = open ? '填表：開啟' : '填表：關閉';
         formStatusBtn.className = 'form-status-btn ' + (open ? 'open' : 'closed');
-        // 顯示條件：是自己的班且是管理員，或是總管理員（任何班都可管理）
         formStatusBtn.style.display = (isManager && (isMySquad || currentUser === superManager)) ? '' : 'none';
     }
 
@@ -1602,7 +1670,7 @@
             viewSquadSelect.value = savedSquad;
             loginOverlay.style.display = 'none';
             mainApp.style.display = 'block';
-            userInfoDisplay.textContent = `👤 ${currentUser} (${currentSquad})`;
+            userInfoDisplay.textContent = (savedUser === superManager) ? `👤 ${superManager} (總管理員)` : `👤 ${savedUser} (${savedSquad})`;
             updateFormStatusUI();
             updateHighlightBtnUI();
             renderTable();
