@@ -41,7 +41,7 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
             margin: 0;
-            padding: 8px 12px; /* 縮減邊距，增加可視範圍 */
+            padding: 8px 12px;
             background: var(--bg-ios);
             color: var(--text-primary);
             touch-action: manipulation;
@@ -79,7 +79,6 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        /* 登入視窗 - iOS 毛玻璃 */
         .login-overlay {
             position: fixed;
             top: 0;
@@ -184,17 +183,16 @@
 
         .main-app { display: none; }
 
-        /* 頂部控制區 - iOS 風格卡片 */
         .header-controls {
             display: flex;
             align-items: center;
             justify-content: space-between;
             flex-wrap: wrap;
-            gap: 8px; /* 減少間距 */
-            margin-bottom: 8px; /* 減少下方間距，讓表格更靠近 */
+            gap: 8px;
+            margin-bottom: 8px;
             width: 100%;
             box-sizing: border-box;
-            padding: 10px 14px; /* 縮減內邊距 */
+            padding: 10px 14px;
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(20px);
             border-radius: 16px;
@@ -250,7 +248,7 @@
         .stat-badge-ua { background: #f2f2f7; color: var(--text-muted); border-color: var(--border-ios); }
 
         select {
-            font-size: 12px; /* 稍微縮小字體以節省空間 */
+            font-size: 12px;
             padding: 3px 4px;
             background: transparent;
             border: none;
@@ -279,7 +277,6 @@
             margin-right: 4px;
         }
 
-        /* iOS 風格按鈕 */
         .change-pwd-btn, .logout-btn, .toggle-btn, .form-status-btn, .highlight-btn, .edit-marquee-btn, .edit-employee-btn {
             padding: 5px 12px;
             font-size: 12px;
@@ -317,7 +314,6 @@
 
         .edit-marquee-btn, .edit-employee-btn { color: #555; }
 
-        /* 確認按鈕 - iOS 風格綠色藥丸 */
         .btn-confirm {
             position: fixed;
             bottom: 30px;
@@ -353,7 +349,6 @@
             opacity: 1 !important;
         }
 
-        /* iOS 風格模態框 */
         .custom-modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -423,10 +418,8 @@
             background: #e5e5ea;
         }
 
-        /* 表格容器 - iOS 風格 */
         .table-container {
             overflow: auto;
-            /* 動態計算高度：扣掉頂部控制區、跑馬燈與邊距，讓表格幾乎填滿螢幕 */
             height: calc(100vh - 155px);
             min-height: 300px;
             box-shadow: var(--shadow-ios);
@@ -452,7 +445,7 @@
             border-bottom: 1px solid var(--border-ios);
             padding: 0;
             min-width: 32px;
-            height: 30px; /* 稍微降低一點高度，多顯示幾行 */
+            height: 30px;
             box-sizing: border-box;
             background-clip: padding-box;
         }
@@ -470,7 +463,6 @@
         thead tr:nth-child(2) th { position: sticky; top: 30px; z-index: 1; }
         thead tr:nth-child(3) th { position: sticky; top: 60px; z-index: 1; }
 
-        /* 固定統計欄 */
         .stats-ot {
             position: sticky; left: 0; width: 40px; min-width: 40px; z-index: 2;
             color: var(--ios-blue); background: #f8f9fa; font-weight: 600; border-right: 1px solid var(--border-ios);
@@ -526,10 +518,9 @@
             box-sizing: border-box;
         }
 
-        /* 下拉選單 */
         .shift-select {
             width: 100%; height: 30px; border: none; background: transparent;
-            font-size: 13px; /* 稍微縮小字體 */
+            font-size: 13px;
             font-family: inherit; text-align: center; text-align-last: center;
             appearance: none; -webkit-appearance: none; -moz-appearance: none; cursor: pointer; outline: none;
             color: inherit; font-weight: 500;
@@ -539,7 +530,6 @@
         }
         .shift-select option { background: #ffffff; color: #1c1c1e; }
 
-        /* 班別顏色（保留原始，僅微調文字對比） */
         .shift-day { background-color: var(--bg-day); color: #000; }
         .shift-night { background-color: var(--bg-night); color: #000; }
         .shift-g { background-color: var(--bg-g); color: #000; font-weight: 600; }
@@ -579,7 +569,6 @@
             box-shadow: 0 0 12px rgba(255, 193, 7, 0.05);
         }
 
-        /* 十字高亮 - iOS 淡藍 */
         body.crosshair-active td.crosshair-highlight,
         body.crosshair-active th.crosshair-highlight {
             background-color: rgba(0, 122, 255, 0.08) !important;
@@ -590,9 +579,8 @@
             background-color: rgba(0, 122, 255, 0.08) !important;
         }
 
-        /* 跑馬燈 - iOS 風格 */
         .marquee-container {
-            margin: 6px 0 6px 0; /* 減少間距，增加可視範圍 */
+            margin: 6px 0 6px 0;
             border: 1px solid var(--border-ios);
             border-radius: 12px;
             background: #ffffff;
@@ -620,14 +608,13 @@
             display: none;
         }
 
-        /* 響應式微調 */
         @media screen and (max-width: 600px) {
             .btn-confirm { bottom: 20px; right: 20px; padding: 12px 22px; font-size: 15px; }
             .header-controls { padding: 8px 10px; }
             .control-group { padding: 2px 4px 2px 8px; }
             .login-card { padding: 28px 20px; }
             .logout-btn { font-size: 14px !important; padding: 6px 14px !important; }
-            .table-container { height: calc(100vh - 200px); } /* 手機版稍微保留一點空間 */
+            .table-container { height: calc(100vh - 200px); }
         }
     </style>
 </head>
@@ -809,7 +796,7 @@
 </div>
 
 <script>
-    // ===== 以下 JavaScript 完全保留原始功能，並加入變更記錄功能 =====
+    // ===== 以下 JavaScript 包含變更記錄與總管理員功能 =====
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzke3WV4JqpmJVgur8fCN9jmP0HjQ6KXyoTCcZfBVZl1fLGO4VEjMgWAnPX5_AaqPjf/exec";
 
     const squadEmployeesDefault = {
@@ -826,10 +813,17 @@
         S4: "陳喬志"
     };
 
+    // ===== 新增：總管理員 =====
+    const superManager = "林素瑛";
+
+    // 判斷使用者是否為該班管理員（包含總管理員）
+    function isManagerOf(squad, user) {
+        return user === squadManagers[squad] || user === superManager;
+    }
+
     const weekDaysTW = ["日", "一", "二", "三", "四", "五", "六"];
 
     let cloudData = { shifts: {}, passwords: {}, otLimits: {}, settings: {} };
-    // ===== 修改：pendingChanges 改為物件，記錄舊值與新值 =====
     let pendingChanges = {}; // { shiftKey: { newValue, oldValue } }
 
     let currentUser = null;
@@ -837,11 +831,11 @@
     let currentViewSquad = null;
     let crosshairEnabled = false; 
 
-    // ===== 新增：取得台北時間字串 =====
+    // 取得台北時間字串 (YYYY/MM/DD HH:mm:ss)
     function getTaipeiTimeString() {
         const now = new Date();
-        const utc = now.getTime() + (now.getTimezoneOffset() * 60000); // 轉為 UTC 毫秒
-        const taipei = new Date(utc + (8 * 3600000)); // 台北時間 UTC+8
+        const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+        const taipei = new Date(utc + (8 * 3600000));
         const year = taipei.getFullYear();
         const month = String(taipei.getMonth() + 1).padStart(2, '0');
         const day = String(taipei.getDate()).padStart(2, '0');
@@ -923,6 +917,13 @@
                 opt.textContent = emp;
                 loginNameSelect.appendChild(opt);
             });
+            // 新增總管理員選項（若尚未存在）
+            if (!squadEmployeesDefault[squad].includes(superManager)) {
+                let opt = document.createElement('option');
+                opt.value = superManager;
+                opt.textContent = superManager + ' (總管理員)';
+                loginNameSelect.appendChild(opt);
+            }
         }
         loginNameSelect.value = '';
     });
@@ -995,7 +996,7 @@
             try {
                 const parsed = JSON.parse(cloudData.settings[key]);
                 if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-            } catch(e) { /* 解析失敗則回退 */ }
+            } catch(e) { }
         }
         return squadEmployeesDefault[squad] || [];
     }
@@ -1003,16 +1004,17 @@
     function updateFormStatusUI() {
         if (!currentSquad || !currentViewSquad) return;
         const isMySquad = (currentViewSquad === currentSquad);
-        const isManager = (currentUser === squadManagers[currentViewSquad]);
+        const isManager = isManagerOf(currentViewSquad, currentUser);
         const open = isFormOpen(currentViewSquad);
         formStatusBtn.textContent = open ? '填表：開啟' : '填表：關閉';
         formStatusBtn.className = 'form-status-btn ' + (open ? 'open' : 'closed');
-        formStatusBtn.style.display = (isMySquad && isManager) ? '' : 'none';
+        // 顯示條件：是自己的班且是管理員，或是總管理員（任何班都可管理）
+        formStatusBtn.style.display = (isManager && (isMySquad || currentUser === superManager)) ? '' : 'none';
     }
 
     function updateHighlightBtnUI() {
         if (!currentUser || !currentSquad) return;
-        const isManager = (currentUser === squadManagers[currentSquad]);
+        const isManager = isManagerOf(currentSquad, currentUser);
         highlightBtn.disabled = !isManager;
         highlightBtn.textContent = crosshairEnabled ? '十字高亮：開' : '十字高亮：關';
         highlightBtn.className = 'highlight-btn' + (crosshairEnabled ? ' active' : '');
@@ -1020,7 +1022,7 @@
     }
 
     highlightBtn.addEventListener('click', function() {
-        if (!currentUser || currentUser !== squadManagers[currentSquad]) return;
+        if (!currentUser || !isManagerOf(currentSquad, currentUser)) return;
         crosshairEnabled = !crosshairEnabled;
         updateHighlightBtnUI();
     });
@@ -1073,10 +1075,10 @@
     });
 
     formStatusBtn.addEventListener('click', function() {
-        if (!currentSquad || !currentViewSquad || currentViewSquad !== currentSquad) return;
-        if (currentUser !== squadManagers[currentSquad]) return;
-        const nextState = isFormOpen(currentSquad) ? 'closed' : 'open';
-        const key = currentSquad + '_form_status';
+        if (!currentSquad || !currentViewSquad) return;
+        if (!isManagerOf(currentViewSquad, currentUser)) return;
+        const nextState = isFormOpen(currentViewSquad) ? 'closed' : 'open';
+        const key = currentViewSquad + '_form_status';
         if (!cloudData.settings) cloudData.settings = {};
         cloudData.settings[key] = nextState;
         postCloudData({ action: 'saveSetting', key: key, value: nextState });
@@ -1176,7 +1178,7 @@
             confirmBtn.style.display = 'none';
             return;
         }
-        const isManager = (currentUser === squadManagers[currentSquad]);
+        const isManager = isManagerOf(currentSquad, currentUser);
         if (isManager) {
             confirmBtn.style.display = 'none';
             return;
@@ -1225,7 +1227,6 @@
                     user: currentUser,
                     timestamp: getTaipeiTimeString()
                 }));
-                // 更新本地 cloudData
                 cloudData.shifts[key] = change.newValue;
             }
             await Promise.all(promises);
@@ -1247,18 +1248,17 @@
         if (!currentUser || !currentSquad) return;
         const viewSquad = currentViewSquad || currentSquad;
         const isMySquad = (viewSquad === currentSquad);
-        const isManagerOfView = (currentUser === squadManagers[viewSquad]);
-        const isManagerOfMy = (currentUser === squadManagers[currentSquad]);
-        const readOnly = !isMySquad;
+        const isManagerOfView = isManagerOf(viewSquad, currentUser);
+        const isManagerOfMy = isManagerOf(currentSquad, currentUser);
+        const readOnly = !isManagerOfView; // 只要對當前班級有管理權限就可編輯
 
         updateFormStatusUI();
         updateHighlightBtnUI();
         const formOpen = isFormOpen(viewSquad);
 
-        otLimitGroup.style.display = (isMySquad && isManagerOfMy && formOpen) ? 'flex' : 'none';
-        
-        editMarqueeBtn.style.display = (isMySquad && isManagerOfMy) ? '' : 'none';
-        editEmployeeBtn.style.display = (isMySquad && isManagerOfMy) ? '' : 'none';
+        otLimitGroup.style.display = (isManagerOfView && formOpen) ? 'flex' : 'none';
+        editMarqueeBtn.style.display = (isManagerOfView) ? '' : 'none';
+        editEmployeeBtn.style.display = (isManagerOfView) ? '' : 'none';
 
         const defaultMarquee = `※"G"→加班；"C"→加班費1倍；"換"→換班日(不加班)；"歲"→歲修(不上班)；"旺"→尾牙(不上班)。`;
         if (cloudData.settings && cloudData.settings['marqueeText']) {
@@ -1320,9 +1320,9 @@
                 selectMark.appendChild(option);
             });
             selectMark.value = dailyMarks[markKey] || '';
-            selectMark.disabled = !(isMySquad && isManagerOfMy);
+            selectMark.disabled = !(isManagerOfView);
             selectMark.addEventListener('change', function() {
-                if (!isMySquad || !isManagerOfMy) return;
+                if (!isManagerOfView) return;
                 const newMark = this.value;
                 dailyMarks[markKey] = newMark;
                 cloudData.settings[viewSquad + '_dailyMarks'] = dailyMarks;
@@ -1352,6 +1352,7 @@
         if (isMySquad) {
             visibleEmployees = isManagerOfMy ? allEmployees : [currentUser];
         } else {
+            // 查看其他班時，如果是總管理員則顯示全部並可編輯，否則唯讀顯示全部
             visibleEmployees = allEmployees;
         }
 
@@ -1379,25 +1380,22 @@
 
                 let select = document.createElement('select');
                 select.className = 'shift-select';
+                // 唯讀條件：沒有管理權限或填表關閉
                 if (readOnly || !formOpen) {
-                    select.disabled = true;
-                } else if (!isMySquad) {
                     select.disabled = true;
                 }
 
                 let baseOptions;
                 if (defaultShift === '') {
-                    // 非上班日：僅空白、G、未，不包含任何請假類型
                     baseOptions = ['', 'G', '未'];
                 } else {
-                    // 有班日：包含 defaultShift 及所有請假/特殊類型（含婚喪公）
                     baseOptions = [defaultShift, '特', '病', '事', '生', '颱', '返', '差', '曠'];
                     extraLeaveTypes.forEach(opt => {
                         if (!baseOptions.includes(opt)) baseOptions.push(opt);
                     });
                 }
-                const isCurrentManager = (isMySquad && currentUser === squadManagers[viewSquad]);
-                if (!isCurrentManager) {
+                // 只有管理員才能選擇「未」
+                if (!isManagerOfView) {
                     baseOptions = baseOptions.filter(opt => opt !== '未');
                 }
                 if (finalValue !== '' && !baseOptions.includes(finalValue)) {
@@ -1412,12 +1410,7 @@
                 });
 
                 select.addEventListener('change', function() {
-                    if (!isMySquad || readOnly) return;
-                    if (!isFormOpen(viewSquad)) {
-                        alert("目前填表已關閉，無法修改班表！");
-                        this.value = finalValue;
-                        return;
-                    }
+                    if (readOnly || !formOpen) return;
                     const newVal = this.value;
                     const limitVal = otLimitSelect.value;
                     if (newVal === 'G' && defaultShift === '' && limitVal !== '') {
@@ -1443,9 +1436,9 @@
                         }
                     }
 
-                    if (isCurrentManager) {
-                        // 管理員直接儲存，附帶舊值
-                        const oldValue = finalValue;  // 變更前的值
+                    // 管理員（含總管理員）直接儲存，附帶舊值
+                    if (isManagerOfView) {
+                        const oldValue = finalValue;
                         if (!cloudData.shifts) cloudData.shifts = {};
                         cloudData.shifts[shiftKey] = newVal;
                         postCloudData({
@@ -1460,7 +1453,7 @@
                         updateCellColor(td, newVal);
                         renderTable();
                     } else {
-                        // 員工暫存變更
+                        // 一般員工暫存變更
                         pendingChanges[shiftKey] = { newValue: newVal, oldValue: finalValue };
                         finalValue = newVal;
                         td.classList.add('pending-edit');
@@ -1548,7 +1541,7 @@
     viewSquadSelect.addEventListener('change', function() {
         const newSquad = this.value;
         if (newSquad === currentViewSquad) return;
-        if (currentViewSquad === currentSquad && Object.keys(pendingChanges).length > 0 && currentUser !== squadManagers[currentSquad]) {
+        if (currentViewSquad === currentSquad && Object.keys(pendingChanges).length > 0 && !isManagerOf(currentSquad, currentUser)) {
             if (!confirm('切換班表將捨棄目前未儲存的變更，確定要繼續嗎？')) {
                 this.value = currentViewSquad;
                 return;
@@ -1678,29 +1671,31 @@
         marqueeModal.style.display = 'none';
     });
 
-    // 管理班表人員邏輯
+    // 管理班表人員邏輯（總管理員可管理當前查看班級）
     editEmployeeBtn.addEventListener('click', function() {
-        const currentList = getEmployeeList(currentSquad);
+        const targetSquad = currentViewSquad || currentSquad;
+        const currentList = getEmployeeList(targetSquad);
         employeeListInput.value = currentList.join('\n');
         empErrorMsg.style.display = 'none';
-        empModalTitle.textContent = `管理班表人員 (${currentSquad})`;
+        empModalTitle.textContent = `管理班表人員 (${targetSquad})`;
         employeeModal.style.display = 'flex';
     });
     cancelEmpBtn.addEventListener('click', () => employeeModal.style.display = 'none');
     saveEmpBtn.addEventListener('click', async function() {
+        const targetSquad = currentViewSquad || currentSquad;
         const rawText = employeeListInput.value;
         let newList = rawText.split(/\r?\n/).map(n => n.trim()).filter(n => n !== '');
         if (newList.length === 0) {
             empErrorMsg.textContent = "名單不可為空！至少需要一個人。";
             empErrorMsg.style.display = "block"; return;
         }
-        const manager = squadManagers[currentSquad];
-        if (!newList.includes(manager)) {
+        const manager = squadManagers[targetSquad];
+        if (manager && !newList.includes(manager)) {
             newList.unshift(manager);
         }
         if(!cloudData.settings) cloudData.settings = {};
-        cloudData.settings[currentSquad + '_employees'] = JSON.stringify(newList);
-        await postCloudData({ action: 'saveSetting', key: currentSquad + '_employees', value: JSON.stringify(newList) });
+        cloudData.settings[targetSquad + '_employees'] = JSON.stringify(newList);
+        await postCloudData({ action: 'saveSetting', key: targetSquad + '_employees', value: JSON.stringify(newList) });
         alert(`人員名單已更新！共 ${newList.length} 人。`);
         employeeModal.style.display = 'none';
         renderTable();
@@ -1720,11 +1715,11 @@
     });
 
     otLimitSelect.addEventListener('change', function() {
-        if (!currentSquad || !currentViewSquad || currentViewSquad !== currentSquad) return;
-        if (currentUser !== squadManagers[currentSquad]) return;
+        if (!currentViewSquad) return;
+        if (!isManagerOf(currentViewSquad, currentUser)) return;
         const year = yearSelect.value;
         const month = monthSelect.value;
-        const limitKey = `${currentSquad}_otlimit_${year}_${month}`;
+        const limitKey = `${currentViewSquad}_otlimit_${year}_${month}`;
         if (!cloudData.otLimits) cloudData.otLimits = {};
         cloudData.otLimits[limitKey] = this.value;
         postCloudData({ action: 'saveOtLimit', key: limitKey, value: this.value });
