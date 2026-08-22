@@ -6,7 +6,6 @@
     <title>捲繞排班(S1~S4)</title>
     <style>
         :root {
-            /* 班別顏色保留原始設定（不可改變） */
             --bg-day: #c6e0b4;
             --bg-g: #ffff00;
             --bg-special: #ff00ff;
@@ -24,7 +23,6 @@
             --bg-public: #ce93d8;
             --border-color: #a0a0a0;
 
-            /* iOS 風格主題色 */
             --bg-ios: #f2f2f7;
             --bg-card: #ffffff;
             --text-primary: #1c1c1e;
@@ -715,13 +713,28 @@
     </div>
 </div>
 
-<!-- 編輯跑馬燈視窗 -->
+<!-- 編輯跑馬燈視窗（新增模式與速度） -->
 <div id="marqueeModal" class="login-overlay" style="display: none; z-index: 10000;">
     <div class="login-card">
         <h2>編輯跑馬燈文字</h2>
         <div class="login-field">
             <label for="marqueeInput">文字內容</label>
             <textarea id="marqueeInput" rows="3" style="width: 100%;"></textarea>
+        </div>
+        <div class="login-field">
+            <label for="marqueeModeSelect">跑馬燈模式</label>
+            <select id="marqueeModeSelect">
+                <option value="scroll">滾動(Scroll)</option>
+                <option value="static">靜止(Static)</option>
+            </select>
+        </div>
+        <div class="login-field">
+            <label for="marqueeSpeedSelect">速度</label>
+            <select id="marqueeSpeedSelect">
+                <option value="60">慢 (60秒)</option>
+                <option value="30" selected>正常 (30秒)</option>
+                <option value="15">快 (15秒)</option>
+            </select>
         </div>
         <div style="display: flex; gap: 10px; margin-top: 15px;">
             <button id="cancelMarqueeBtn" class="login-btn" style="background-color: #6c757d;">取消</button>
@@ -835,7 +848,7 @@
 </div>
 
 <script>
-    // ===== 以下 JavaScript 包含變更記錄與總管理員、模式選擇功能 =====
+    // ===== 以下 JavaScript 包含變更記錄、總管理員、模式選擇與跑馬燈設定 =====
     const GAS_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzke3WV4JqpmJVgur8fCN9jmP0HjQ6KXyoTCcZfBVZl1fLGO4VEjMgWAnPX5_AaqPjf/exec";
 
     const squadEmployeesDefault = {
@@ -853,7 +866,7 @@
     };
 
     const superManager = "林素瑛";
-    let currentMode = 'edit'; // 'view' 或 'edit'
+    let currentMode = 'edit';
 
     function isManagerOf(squad, user) {
         return user === squadManagers[squad] || user === superManager;
@@ -937,6 +950,8 @@
     const editMarqueeBtn = document.getElementById('editMarqueeBtn');
     const marqueeModal = document.getElementById('marqueeModal');
     const marqueeInput = document.getElementById('marqueeInput');
+    const marqueeModeSelect = document.getElementById('marqueeModeSelect');
+    const marqueeSpeedSelect = document.getElementById('marqueeSpeedSelect');
     const saveMarqueeBtn = document.getElementById('saveMarqueeBtn');
     const cancelMarqueeBtn = document.getElementById('cancelMarqueeBtn');
     const marqueeErrorMsg = document.getElementById('marqueeErrorMsg');
@@ -955,7 +970,6 @@
 
     function applyModeUI() {
         if (currentMode === 'view') {
-            // 檢視模式：只留姓名、年份、月份、查看班表、隱藏統計、登出
             changePwdBtn.style.display = 'none';
             otLimitGroup.style.display = 'none';
             totalStatsGroup.style.display = 'none';
@@ -963,12 +977,25 @@
             formStatusBtn.style.display = 'none';
             editMarqueeBtn.style.display = 'none';
             editEmployeeBtn.style.display = 'none';
-            // 隱藏確認按鈕（不應出現在 view 模式）
             confirmBtn.style.display = 'none';
         } else {
-            // 編輯模式：依權限顯示
             changePwdBtn.style.display = '';
-            // otLimitGroup, highlightBtn, formStatusBtn 等由 renderTable 動態控制
+            // 其他按鈕由 renderTable 控制顯示
+        }
+    }
+
+    function applyMarqueeSettings() {
+        // 從 settings 讀取跑馬燈模式與速度
+        const mode = (cloudData.settings && cloudData.settings['marqueeMode']) ? cloudData.settings['marqueeMode'] : 'scroll';
+        const speed = (cloudData.settings && cloudData.settings['marqueeSpeed']) ? parseInt(cloudData.settings['marqueeSpeed']) : 30;
+        
+        const marqueeContent = document.getElementById('marqueeText');
+        if (mode === 'static') {
+            marqueeContent.style.animation = 'none';
+            marqueeContent.style.paddingLeft = '0';
+        } else {
+            marqueeContent.style.animation = `scrollMarquee ${speed}s linear infinite`;
+            marqueeContent.style.paddingLeft = '100%';
         }
     }
 
@@ -1023,6 +1050,7 @@
             userInfoDisplay.textContent = `👤 ${superManager} (總管理員)`;
             viewSquadSelect.value = 'S1';
             applyModeUI();
+            applyMarqueeSettings();
             updateFormStatusUI();
             updateHighlightBtnUI();
             renderTable();
@@ -1129,12 +1157,9 @@
         document.body.classList.toggle('crosshair-active', crosshairEnabled);
         if (currentMode === 'view') {
             highlightBtn.style.display = 'none';
-            document.body.classList.remove('crosshair-active'); // 關閉高亮
+            document.body.classList.remove('crosshair-active');
         } else {
-            // 顯示由 applyModeUI 處理，但這裡確保如果 view 模式已隱藏，不要被覆蓋
-            if (currentMode === 'edit') {
-                highlightBtn.style.display = isManager ? '' : 'none';
-            }
+            highlightBtn.style.display = isManager ? '' : 'none';
         }
     }
 
@@ -1375,15 +1400,14 @@
 
         updateFormStatusUI();
         updateHighlightBtnUI();
-        applyModeUI(); // 確保檢視模式隱藏控件
+        applyModeUI();
+        applyMarqueeSettings();
 
-        // 根據模式決定唯讀
         let readOnly = !isManagerOfView;
         if (currentMode === 'view') {
             readOnly = true;
         }
 
-        // 顯示人員範圍
         let allEmployees = getEmployeeList(viewSquad);
         let visibleEmployees;
         if (currentMode === 'view') {
@@ -1396,7 +1420,6 @@
             }
         }
 
-        // 控制項顯示
         if (currentMode === 'edit') {
             otLimitGroup.style.display = (isManagerOfView && formOpen) ? 'flex' : 'none';
             editMarqueeBtn.style.display = isManagerOfView ? '' : 'none';
@@ -1718,6 +1741,7 @@
             mainApp.style.display = 'block';
             userInfoDisplay.textContent = `👤 ${currentUser} (${currentSquad})`;
             applyModeUI();
+            applyMarqueeSettings();
             updateFormStatusUI();
             updateHighlightBtnUI();
             renderTable();
@@ -1744,6 +1768,7 @@
             mainApp.style.display = 'block';
             userInfoDisplay.textContent = (savedUser === superManager) ? `👤 ${superManager} (總管理員)` : `👤 ${savedUser} (${savedSquad})`;
             applyModeUI();
+            applyMarqueeSettings();
             updateFormStatusUI();
             updateHighlightBtnUI();
             renderTable();
@@ -1791,23 +1816,36 @@
         changePwdModal.style.display = 'none';
     });
 
-    // 跑馬燈邏輯
+    // 跑馬燈編輯與儲存（包含模式、速度）
     editMarqueeBtn.addEventListener('click', function() {
         marqueeInput.value = marqueeText.textContent;
+        const currentModeSetting = (cloudData.settings && cloudData.settings['marqueeMode']) ? cloudData.settings['marqueeMode'] : 'scroll';
+        const currentSpeed = (cloudData.settings && cloudData.settings['marqueeSpeed']) ? cloudData.settings['marqueeSpeed'] : '30';
+        marqueeModeSelect.value = currentModeSetting;
+        marqueeSpeedSelect.value = currentSpeed;
         marqueeErrorMsg.style.display = 'none';
         marqueeModal.style.display = 'flex';
     });
+
     cancelMarqueeBtn.addEventListener('click', () => marqueeModal.style.display = 'none');
+
     saveMarqueeBtn.addEventListener('click', async function() {
         const newText = marqueeInput.value.trim();
         if (!newText) {
             marqueeErrorMsg.textContent = "跑馬燈內容不可空白！";
             marqueeErrorMsg.style.display = "block"; return;
         }
-        if(!cloudData.settings) cloudData.settings = {};
+        const newMode = marqueeModeSelect.value;
+        const newSpeed = marqueeSpeedSelect.value;
+        if (!cloudData.settings) cloudData.settings = {};
         cloudData.settings['marqueeText'] = newText;
+        cloudData.settings['marqueeMode'] = newMode;
+        cloudData.settings['marqueeSpeed'] = newSpeed;
         await postCloudData({ action: 'saveSetting', key: 'marqueeText', value: newText });
+        await postCloudData({ action: 'saveSetting', key: 'marqueeMode', value: newMode });
+        await postCloudData({ action: 'saveSetting', key: 'marqueeSpeed', value: newSpeed });
         marqueeText.textContent = newText;
+        applyMarqueeSettings();
         alert("跑馬燈文字已更新！");
         marqueeModal.style.display = 'none';
     });
